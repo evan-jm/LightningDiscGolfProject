@@ -33,10 +33,17 @@ constraint Item_PK primary key(Name)
 
 create table Order
 (
-Order_ID int not null auto_increment
-Item_Name varchar(15) not null
-Quantity int(2) not null
-ID int not null auto_increment,
-constraint Order_PK primary key(Order_ID)
-constraint Order_FK foreign key(ID) from User(ID)
-)
+Order_ID int not null auto_increment,
+Order_Date date not null,
+Customer_ID int,
+constraint Order_PK primary key(Order_ID),
+constraint Order_FK foreign key(Customer_ID) references User(ID)
+);
+
+create table Order_Line
+(
+Order_ID int not null,
+Product_Name varchar(15) not null,
+Product_Quantity int(2) not null,
+constraint Order_Line_FK foreign key(Order_ID) references Order(Order_ID)
+);
