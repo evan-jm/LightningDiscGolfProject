@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>{% block title %}{% endblock %}</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+    </head>
+    <body>
+            <nav class="topnav">
+            <div>
+                <a href="{{ url_for('Home') }}"></i>Home</a>
+                <a href="{{ url_for('Home') }}"></i>Logout</a>
+                <a href="{{ url_for('adminLogin') }}"></i>Admin</a>
+                <a href="#about">About</a>
+            </div>
+            </nav>
+        <div class="content">
+            {% block content %}{% endblock %}
+        </div>
+    </body>
+</html>

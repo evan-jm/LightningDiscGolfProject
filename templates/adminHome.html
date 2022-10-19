@@ -1,0 +1,12 @@
+<html>
+{% extends 'layout.html' %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<h2 class="h2">Hello, {{username}}!</h2>
+<p>Welcome to your Admin Page!</p>
+<a href="{{ url_for('addItem') }}"><button type="button">Add Item</button></a>
+<a href="{{ url_for('inventory') }}"><button type="button">Check Inventory</button></a>
+{% endblock %}
+</html>

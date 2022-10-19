@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lightning Disc Golf Inventory</title>
+</head>
+<body>
+<a href="{{ url_for('adminHome') }}">Home Page></a>
+<table>
+    <thead>
+        <tr>
+            <th>Brand</th>
+            <th>Item Name</th>
+            <th>Release Date</th>
+            <th>Disc Number</th>
+            <th>Abbreviation</th>
+            <th>Cost</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in output_data %}
+            <tr>
+                <td>{{ row.Brand }}</td>
+                <td>{{ row.Name }}</td>
+                <td>{{ row.Release_Date}} </td>
+                <td>{{ row.Disc_Number }}</td>
+                <td>{{ row.Abbreviation }}</td>
+                <td>{{ row.Cost }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</body>
+</html>
