@@ -1,5 +1,5 @@
-* {https://mail.google.com/mail/u/0?ui=2&ik=70de7ed30e&attid=0.7&permmsgid=msg-a%3Ar5226851373122916244&th=183d66c316d11ae4&view=att&disp=inline&realattid=f_l98gd3al7&ser=1
-    box-sizing: border-box;https://mail.google.com/mail/u/0?ui=2&ik=70de7ed30e&attid=0.7&permmsgid=msg-a%3Ar5226851373122916244&th=183d66c316d11ae4&view=att&disp=inline&realattid=f_l98gd3al7&ser=1
+* {
+    box-sizing: border-box;
     font-family: -apple-system, BlinkMacSystemFont, "segoe ui", roboto, oxygen, ubuntu, cantarell, "fira sans", "droid sans", "helvetica neue", Arial, sans-serif;
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
@@ -90,6 +90,8 @@ body2 {
 
 
 /***************************************************
+
+
 .navtop {
     background-color: #2f3947;
     height: 60px;
@@ -158,6 +160,8 @@ body.loggedin {
   padding: 5px;
   margin: 0 0 10px 0;
 }
+
+
 ****************************************/
 
 /*
@@ -196,12 +200,14 @@ body {
 }
 
 /*
+
 body {
   background-color: white;
   style=color:blue;
   padding: 20px;
   font-family: Arial;
 }
+
 */
 
 
