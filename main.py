@@ -248,6 +248,26 @@ def inventory():
 #    return render_template('register.html', msg=msg)
 
 
+# @app.route('/itemPage.html', methods=['GET', 'POST'])
+# def itemPage() :
+#     msg = ''
+#    # Check if "item" POST requests exist (user submitted form)
+#     if request.method == 'POST' and 'Name' in request.form:
+#         # Create variables for easy access
+#         name = request.form['Name']
+#         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+#         cursor.execute('SELECT * FROM Item WHERE Name = %s', (name,))
+#         # Fetch one record and return result
+#         product = cursor.fetchone()
+#         # If account exists in accounts table in out database
+#         if product:
+#             # Create session data, we can access this data in other routes
+#             session['Name'] = product['Name']
+#             # Redirect to item's page
+#             return redirect(url_for('itemPage'))
+#     return render_template('itemPage.html', msg=msg)
+
+
 # @app.route('/order.html', methods=['GET', 'POST'])
 # def showOrder() :
 
