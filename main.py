@@ -269,8 +269,13 @@ def inventory():
 
 # @app.route('/addItemToCart.html', methods=['GET', 'POST'])
 # def addItemToCart() :
-#     product_Name = request.form.get('product_Name')
-#     quantity = request.form.get('quantity')
+#     if request.method == 'POST' and 'product_Name' in regester.form and 'quantity' in request.form :
+#         product_Name = request.form.get('product_Name')
+#         quantity = request.form.get('quantity')
+        
+#         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+#         cursor.execute('SELECT * FROM Item WHERE product_Name = %s', (product_Name,))
+#         item = cursor.fetchone()
 
 
 # @app.route('/order.html', methods=['GET', 'POST'])
