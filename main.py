@@ -267,6 +267,11 @@ def inventory():
 #             return redirect(url_for('itemPage'))
 #     return render_template('itemPage.html', msg=msg)
 
+# @app.route('/addItemToCart.html', methods=['GET', 'POST'])
+# def addItemToCart() :
+#     product_Name = request.form.get('product_Name')
+#     quantity = request.form.get('quantity')
+
 
 # @app.route('/order.html', methods=['GET', 'POST'])
 # def showOrder() :
