@@ -22,14 +22,24 @@ constraint User_PK primary key(ID)
 
 create table Item
 (
+ItemID int not null auto_increment,
+Image varchar(255) not null,
 Brand varchar(15) not null,
 Name varchar(15) not null,
-Release_Date date not null,
-Disc_Number int not null,
-Abbreviation varchar(15) not null,
+DiscType varchar(20),
+Description text,
+Release_Date date,
+ItemCode varchar(15) not null,
 Cost decimal(10,2) not null,
-constraint Item_PK primary key(Name)
+constraint Item_PK primary key(ItemID)
 );
+
+insert into Item values 
+(1,'1.PNG','Discmania','Cloudbreaker','Distance',null, null,'DMCB',50.00),
+(2,'1.PNG','Discmania','Full Tilt','Fairway',null, null,'DMFT',20.00),
+(3,'1.PNG','Discmania','Breaker','Putter',null, null,'DMBR',30.00);
+
+
 
 create table Order
 (
