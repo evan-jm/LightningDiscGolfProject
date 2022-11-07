@@ -38,7 +38,7 @@ def userLogin():
         # Create variables for easy access
         username = request.form['username']
         password = request.form['password']
-        # Check if account exists using MySQL
+        # Check if account Admin account exists using MySQL
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM Admin WHERE username = %s AND password = %s', (username, password,))
         # Fetch one record and return result
@@ -51,6 +51,7 @@ def userLogin():
            session['username'] = account['username']
            # Redirect to home page
            return redirect(url_for('adminHome'))
+        # If account does not exist in Admin, check to see if credentials exist in User
         else if not account :
             # Check if account exists using MySQL
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -65,41 +66,41 @@ def userLogin():
                 session['username'] = account['username']
                 # Redirect to home page
                 return redirect(url_for('userHome'))
-       else:
+       else :
             # Account doesnt exist or username/password incorrect
             msg = 'Incorrect username/password!'
     # Show the login form with message (if any)
     return render_template('login.html', msg=msg)
 
 
-# http://localhost:5000/pythonlogin/ - this will be the login page, we need to use both GET and POST requests
-@app.route('/adminLogin', methods=['GET', 'POST'])
-def adminLogin():
-   # Output message if something goes wrong...
-   msg = ''
-   # Check if "email" and "password" POST requests exist (user submitted form)
-   if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
-       # Create variables for easy access
-       username = request.form['username']
-       password = request.form['password']
-       # Check if account exists using MySQL
-       cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-       cursor.execute('SELECT * FROM Admin WHERE username = %s AND password = %s', (username, password,))
-       # Fetch one record and return result
-       account = cursor.fetchone()
-       # If account exists in accounts table in out database
-       if account:
-           # Create session data, we can access this data in other routes
-           session['loggedin'] = True
-           session['ID'] = account['ID']
-           session['username'] = account['username']
-           # Redirect to home page
-           return redirect(url_for('adminHome'))
-       else:
-           # Account doesnt exist or username/password incorrect
-           msg = 'Incorrect username/password!'
-   # Show the login form with message (if any)
-   return render_template('adminLogin.html', msg=msg)
+# # http://localhost:5000/pythonlogin/ - this will be the login page, we need to use both GET and POST requests
+# @app.route('/adminLogin', methods=['GET', 'POST'])
+# def adminLogin():
+#    # Output message if something goes wrong...
+#    msg = ''
+#    # Check if "email" and "password" POST requests exist (user submitted form)
+#    if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+#        # Create variables for easy access
+#        username = request.form['username']
+#        password = request.form['password']
+#        # Check if account exists using MySQL
+#        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+#        cursor.execute('SELECT * FROM Admin WHERE username = %s AND password = %s', (username, password,))
+#        # Fetch one record and return result
+#        account = cursor.fetchone()
+#        # If account exists in accounts table in out database
+#        if account:
+#            # Create session data, we can access this data in other routes
+#            session['loggedin'] = True
+#            session['ID'] = account['ID']
+#            session['username'] = account['username']
+#            # Redirect to home page
+#            return redirect(url_for('adminHome'))
+#        else:
+#            # Account doesnt exist or username/password incorrect
+#            msg = 'Incorrect username/password!'
+#    # Show the login form with message (if any)
+#    return render_template('adminLogin.html', msg=msg)
 
 
 @app.route('/logout')
