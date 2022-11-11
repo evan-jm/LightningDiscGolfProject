@@ -35,9 +35,9 @@ constraint Item_PK primary key(ItemID)
 );
 
 insert into Item values 
-(1,'1.PNG','Discmania','Cloudbreaker','Distance',null, null,'DMCB',50.00),
-(2,'1.PNG','Discmania','Full Tilt','Fairway',null, null,'DMFT',20.00),
-(3,'1.PNG','Discmania','Breaker','Putter',null, null,'DMBR',30.00);
+(1,'1.PNG','Discmania','Cloudbreaker','Distance', 'Item Description', null,'DMCB',50.00),
+(2,'1.PNG','Discmania','Full Tilt','Fairway', 'Item Description', null,'DMFT',20.00),
+(3,'1.PNG','Discmania','Breaker','Putter', 'Item Description', null,'DMBR',30.00);
 
 
 

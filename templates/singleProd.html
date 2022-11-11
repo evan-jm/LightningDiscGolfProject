@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{item.Name}}</title>
+   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.2.0/css/all.css">
+</head>
+<body>
+<div class="topnav">
+      <a href="{{ url_for('Home') }}">Home</a>
+      <a href="{{ url_for('userLogin') }}">Login/Register</a>
+      <a href="{{ url_for('products') }}" class="active">All Products</a>
+      <a href="{{ url_for('showCart') }}">View Cart</a>
+      <a href="#about">About</a>
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6" id="b_image">
+            <img src="/static/product-images/{{ item.Image }}" width="400" height="400">
+        </div>
+        <div class="col-md-7">
+            <h4>Product Name: {{item.Name}}</h4>
+            <hr>
+            <p> Product Price: {{item.Cost}}</p>
+            <b>Description</b>
+            <p>{{item.Description}}</p>
+        </div>
+    </div>
+
+    <div class="row">
+          <div class="col-md-12" id="s_image">
+              <img src="/static/product-images/{{ item.Image }}" width="120" height="120">
+          </div>
+    </div>
+</div>
+</body>
+<style>
+    .col-md-7 {
+                padding-top: 100px;
+            }
+            .pb-70 {
+                padding-bottom: 70px;
+            }
+            .section-header {
+                margin-bottom: 60px;
+                text-align: right;
+            }
+</style>
+</html>
