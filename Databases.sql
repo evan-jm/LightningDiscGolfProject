@@ -57,5 +57,5 @@ ItemID int not null,
 Product_Quantity int not null,
 constraint Order_Line_FK1 foreign key(Order_ID) references Orders(Order_ID),
 constraint Order_Line_FK2 foreign key(ItemID) references Item(ItemID),
-constraint Order_Line_PK primary key(Order_ID,Item_ID)
+constraint Order_Line_PK primary key(Order_ID,ItemID)
 );
