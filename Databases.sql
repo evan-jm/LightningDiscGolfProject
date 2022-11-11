@@ -47,7 +47,7 @@ Order_ID int not null auto_increment,
 Order_Date date not null,
 User_ID int,
 constraint Order_PK primary key(Order_ID),
-constraint Order_FK foreign key(Customer_ID) references User(ID)
+constraint Order_FK foreign key(User_ID) references User(ID)
 );
 
 create table Order_Line_Item
