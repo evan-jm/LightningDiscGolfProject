@@ -44,19 +44,21 @@ insert into Item values
 
 
 
-create table Order
+create table Orders
 (
 Order_ID int not null auto_increment,
 Order_Date date not null,
-Customer_ID int,
+User_ID int,
 constraint Order_PK primary key(Order_ID),
-constraint Order_FK foreign key(Customer_ID) references User(ID)
+constraint Order_FK foreign key(User_ID) references User(ID)
 );
 
-create table Order_Line
+create table Order_Line_Item
 (
 Order_ID int not null,
-Product_Name varchar(15) not null,
-Product_Quantity int(2) not null,
-constraint Order_Line_FK foreign key(Order_ID) references Order(Order_ID)
+ItemID int not null,
+Product_Quantity int not null,
+constraint Order_Line_FK1 foreign key(Order_ID) references Orders(Order_ID),
+constraint Order_Line_FK2 foreign key(ItemID) references Item(ItemID),
+constraint Order_Line_PK primary key(Order_ID,ItemID)
 );
