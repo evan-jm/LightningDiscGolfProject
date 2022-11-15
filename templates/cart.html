@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Products Page</title>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.2.0/css/all.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="topnav">
+      <a href="{{ url_for('Home') }}">Home</a>
+      <a href="{{ url_for('userLogin') }}">Login/Register</a>
+      <a href="{{ url_for('products') }}">All Products</a>
+      <a href="{{ url_for('showCart') }}" class="active">View Cart</a>
+      <a href="{{ url_for('userHome') }}">Profile</a>
+      <a href="#about">About</a>
+</div>
+
+<div class="container">
+    <div class="row">
+        <p><h2>Your Cart</h2></p>
+        <div class="col-sm-12">
+            <div>
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <ul class=flashes>
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+            </div>
+            {% if 'cart_item' in session %}
+                <p><a id="btnEmpty" href="{{ url_for('.empty_cart') }}" class="btn btn-danger">Empty Cart</a></p>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th class="text-center">Unit Price</th>
+                            <th class="text-center">Price</th>
+                            <th> </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                      {% for key, val in session['cart_item'].items() %}
+                        {% set quantity = session['cart_item'][key]['quantity'] %}
+                        {% set cost = session['cart_item'][key]['Cost'] %}
+                        {% set item_price = session['cart_item'][key]['total_price'] %}
+                        <tr>
+                            <td class="col-sm-8 col-md-6">
+                            <div class="media">
+                                <a class="thumbnail pull-left" href="#"> <img class="media-object" src="/static/product-images/{{ session['cart_item'][key]['Image'] }}" style="width: 72px; height: 72px;"> </a>
+                                <div class="media-body">
+                                    <h4 class="media-heading"> <a href="#">{{ session['cart_item'][key]['Name'] }}</a></h4>
+                                    <h5 class="media-heading"> by <a href="#">Brand</a></h5>
+                                    <span>Status: </span><span class="text-success"><strong>In Stock</strong></span>
+                                </div>
+                            </div></td>
+                            <td class="col-sm-1 col-md-1" style="text-align: center">
+                                <input type="email" class="form-control" value="{{ quantity }}">
+                            </td>
+                              <td class="col-sm-1 col-md-1 text-center"><strong>${{ cost }} </strong></td>
+                            <td class="col-sm-1 col-md-1 text-center"><strong>${{ item_price }} </strong></td>
+                            <td class="col-sm-1 col-md-1">
+                            <a href="{{ url_for('.delete_product', code=session['cart_item'][key]['ItemCode']) }}" class="btn btn-danger">
+                                <span class="glyphicon glyphicon-remove"></span> Remove
+                            </a></td>
+                        </tr>
+                     {% endfor %}
+                        <tr>
+                            <td colspan="4"><h5>Total Quantity</h5></td>
+                            <td class="text-right"><h5><strong>{{ session['all_total_quantity'] }}</strong></h5></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><h3>Total</h3></td>
+                            <td colspan="2" class="text-right"><h3><strong>$ {{ session['all_total_price'] }}</strong></h3></td>
+                        </tr>
+                    </tbody>
+                </table>
+                 <tr>
+                    <td colspan="4">
+                    <p><a id="btnContinue" href="{{ url_for('.products') }}" class="btn btn-danger">Continue Shopping</a></p>
+                    <button type="button" class="btn btn-success">
+                        Checkout <span class="glyphicon glyphicon-play"></span>
+                    </button></td>
+                 </tr>
+            {% else: %}
+                <div class="no-records">Your Cart Is Empty</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+</body>
+<style>
+    .container
+    {
+        background-color: rgb(255, 255, 255);
+    }
+</style>
+</html>

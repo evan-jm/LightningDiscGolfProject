@@ -15,6 +15,7 @@
       <a href="{{ url_for('userLogin') }}">Login/Register</a>
       <a href="{{ url_for('products') }}" class="active">All Products</a>
       <a href="{{ url_for('showCart') }}">View Cart</a>
+      <a href="{{ url_for('userHome') }}">Profile</a>
       <a href="#about">About</a>
 </div>
 
@@ -29,17 +30,14 @@
             <div class="col-sm-6 col-lg-3">
              <form method="post" action="/add">
                  <div class="single-publication">
-                    <figure style="width:240px;">
-                        <a href="#">
-                            <img src="/static/product-images/{{ item.Image }} ">
+                    <figure style="width:200px;">
+                        <a href="{{url_for('single_item_page',id=item.ItemID)}}">
+                            <img src="/static/product-images/{{ item.Image }} " alt="{{item.Name}}">
                         </a>
-                        <ul>
-                            <li><a id="btnEmpty" href="{{ url_for('single_item_page', id=item.ItemID) }}" class="btn btn-danger">View Product</a></li>
-                        </ul>
                     </figure>
                      <div class="publication-content">
                         <span class="type">{{ item.DiscType }}</span>
-                        <h3><a href="#">{{ item.Name }}</a></h3>
+                        <h3><a href="{{url_for('single_item_page',id=item.ItemID)}}">{{ item.Name }}</a></h3>
                          <ul>
                             <li><i class="icofont-star"></i></li>
                             <li><i class="icofont-star"></i></li>
@@ -51,9 +49,9 @@
                     </div>
                      <div class="add-to-cart">
                         <input type="hidden" name="code" value="{{ item.ItemCode }}"/>
-                        <input type="text" class="product-quantity" name="quantity" value="1" size="2" />
+                        <input type="number" class="product-quantity" name="quantity" value="1" size="2" />
                         <input type="submit" value="Add to Cart" class="default-btn" />
-                    </div>
+                    </div>                    
                  </div>
              </form>
             </div>
@@ -135,6 +133,7 @@
             .single-publication .publication-content {
                 text-align: center;
                 padding: 20px;
+                background-color: #fafafa;
             }
             .single-publication .publication-content .type {
                 display: inline-block;

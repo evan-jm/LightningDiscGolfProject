@@ -17,8 +17,11 @@ first_name varchar(10),
 last_name varchar(20),
 email varchar(20) not null,
 password varchar(20) not null,
-constraint User_PK primary key(ID)
+constraint Admin_PK primary key(ID)
 );
+
+insert into Admin values (1,'mattm','matt','myles','matt@gmail.com','pword');
+
 
 create table Item
 (
@@ -30,7 +33,7 @@ DiscType varchar(20),
 Description text,
 Release_Date date,
 ItemCode varchar(15) not null,
-Cost decimal(10,2) not null,
+Cost varchar(10) not null,                  
 constraint Item_PK primary key(ItemID)
 );
 

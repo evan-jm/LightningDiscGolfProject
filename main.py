@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
+from decimal import *
 import re
 
 app = Flask(__name__)
@@ -125,7 +126,13 @@ def userHome():
     # Check if user is loggedin
     if 'loggedin' in session:
         # User is loggedin show them the home page
-        return render_template('userHome.html', username=session['username'])
+         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+         cursor.execute('SELECT * FROM Admin WHERE username = %s', (session['username'],))
+         account= cursor.fetchone()
+         if account:
+            return render_template('adminHome.html', username=session['username'])
+         else:
+            return render_template('userHome.html', username=session['username'])
     # User is not loggedin redirect to login page
     return redirect(url_for('userLogin'))
 
@@ -224,7 +231,9 @@ def add_product_to_cart():
             cursor.execute("SELECT * FROM Item WHERE ItemCode=%s", (_code,))
             row = cursor.fetchone()
 
-            itemArray = {row['ItemCode']: {'Name': row['Name'], 'ItemCode': row['ItemCode'], 'quantity': _quantity, 'Cost': row['Cost'], 'Image': row['Image'], 'total_price': _quantity * row['Cost']}}
+            costStr=row['Cost']
+            cost= Decimal(costStr)
+            itemArray = {row['ItemCode']: {'Name': row['Name'], 'ItemCode': row['ItemCode'], 'quantity': _quantity, 'Cost': cost, 'Image': row['Image'], 'total_price': _quantity * cost}}
 
             all_total_price = 0
             all_total_quantity = 0
@@ -237,7 +246,7 @@ def add_product_to_cart():
                             old_quantity = session['cart_item'][key]['quantity']
                             total_quantity = old_quantity + _quantity
                             session['cart_item'][key]['quantity'] = total_quantity
-                            session['cart_item'][key]['total_price'] = total_quantity * row['Cost']
+                            session['cart_item'][key]['total_price'] = total_quantity * cost
                 else:
                     session['cart_item'] = array_merge(session['cart_item'], itemArray)
 
@@ -249,7 +258,7 @@ def add_product_to_cart():
             else:
                 session['cart_item'] = itemArray
                 all_total_quantity = all_total_quantity + _quantity
-                all_total_price = all_total_price + _quantity * row['Cost']
+                all_total_price = all_total_price + _quantity * cost
 
             session['all_total_quantity'] = all_total_quantity
             session['all_total_price'] = all_total_price
@@ -298,7 +307,7 @@ def delete_product(code):
             session['all_total_quantity'] = all_total_quantity
             session['all_total_price'] = all_total_price
 
-        return redirect(url_for('.products'))
+        return redirect(url_for('.showCart'))
     except Exception as e:
         print(e)
 
