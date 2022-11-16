@@ -154,8 +154,9 @@ def addItem():
     # Output message if something goes wrong...
     msg = ''
     # Check if "brand", "name", "releaseDate", "discNumber", "abbreviation", and "cost" POST requests exist (user submitted form)
-    if request.method == 'POST' and 'brand' in request.form and 'name' in request.form and 'release_date' in request.form and 'disc_number' in request.form and 'abbreviation' in request.form and 'cost' in request.form:
+    if request.method == 'POST' and 'image' in request.form and 'brand' in request.form and 'name' in request.form and 'release_date' in request.form and 'disc_number' in request.form and 'abbreviation' in request.form and 'cost' in request.form:
         # Create variables for easy access
+        image = request.form['image']
         brand = request.form['brand']
         name = request.form['name']
         release_date = request.form['release_date']
@@ -170,6 +171,8 @@ def addItem():
         # If item exists show error and validation checks
         if item:
             msg = 'Item already exists!'
+        elif not re.match('^[A-Za-z0-9_-]*$', image):
+            msg = 'Image must contain only characters, numbers, and symbols!'
         elif not re.match(r'[A-Za-z0-9]+', brand):
             msg = 'Brand must contain only characters and numbers!'
         elif not re.match(r'[A-Za-z0-9]+', name):
@@ -186,7 +189,7 @@ def addItem():
             msg = 'Please fill out the form!'
         else:
             # Item doesnt exists and the form data is valid, now insert new item into items table
-            cursor.execute('INSERT INTO Item (brand, name, release_date, disc_number, abbreviation, cost) VALUES ( %s, %s, %s, %s, %s, %s)', (brand, name, release_date, disc_number, abbreviation, cost,))
+            cursor.execute('INSERT INTO Item (image, brand, name, release_date, disc_number, abbreviation, cost) VALUES ( %s, %s, %s, %s, %s, %s)', (image, brand, name, release_date, disc_number, abbreviation, cost,))
             mysql.connection.commit()
             msg = 'Item successfully added'
 
