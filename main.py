@@ -221,6 +221,22 @@ def products():
     return render_template('products.html',items=rows)
 
 
+@app.route('/brands.html',methods=['GET', 'POST'])
+def brands():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT Brand FROM Item')
+    brands= cursor.fetchall()
+    return render_template('brands.html',itembrands=brands)
+
+
+@app.route('/disctypes.html',methods=['GET', 'POST'])
+def disc_types():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT DiscType FROM Item')
+    types= cursor.fetchall()
+    return render_template('disctypes.html',disctypes=types)
+
+
 #Method for adding project to cart, uses array for each thing
 @app.route('/add', methods=['POST'])
 def add_product_to_cart():

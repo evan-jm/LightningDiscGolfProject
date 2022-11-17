@@ -19,6 +19,44 @@
       <a href="#about">About</a>
 </div>
 
+<h3 class = "h3"> </h3>
+
+<!--putting the navbar here-->
+
+<div style="margin-top:0">
+    <nav class="navbar navbar-expand-lg bg-light" style = "margin-top: 0">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Sort By:</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Brand
+                                </a>
+                                    <ul class="dropdown-menu">
+                                        {% for brand in items %}
+                                        <li><a class="dropdown-item" href="#">{{items.Brand}}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                            </li>
+                    </ul>
+                        <form class="d-flex" role="search">
+                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                            <button class="btn btn-outline-success" type="submit">Search</button>
+                        </form>
+                </div>
+        </div>
+    </nav>
+</div>
+
+
+
+
+
+
 <section class="our-publication pt-100 pt-70">
     <div class="container">
         <div class="section-header">
@@ -30,7 +68,7 @@
             <div class="col-sm-6 col-lg-3">
              <form method="post" action="/add">
                  <div class="single-publication">
-                    <figure style="width:200px;">
+                    <figure style="height:100%; width: 100%; width:200px;">
                         <a href="{{url_for('single_item_page',id=item.ItemID)}}">
                             <img src="/static/product-images/{{ item.Image }} " alt="{{item.Name}}">
                         </a>
