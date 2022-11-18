@@ -4,48 +4,52 @@
     <meta charset="UTF-8">
     <title>Add Item</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <!--<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">-->
 </head>
 
 <body>
 
  <div class="topnav">
-  <a href="{{ url_for('Home') }}">Home</a>
-  <a href="{{ url_for('userLogin') }}">Login/Register</a>
-  <a href="{{ url_for('adminHome') }}">Admin Home</a>
-  <a href="#about">About</a>
+    <a href="{{ url_for('Home') }}">Home</a>
+    <a href="{{ url_for('userLogin') }}">Login/Register</a>
+    <a href="{{ url_for('products') }}" class="active">All Products</a>
+    <a href="{{ url_for('showCart') }}">View Cart</a>
+    <a href="{{ url_for('userHome') }}">Profile</a>
+    <a href="#about">About</a>
 </div>
-
-        <div class="addItem">
-            <h1 class="h3">Add Item(s)</h1>
-            <form action="{{ url_for('addItem') }}" method="post" autocomplete="off">
-                <label for="brand">
-                    <i class="fas fa-user"></i>
-                </label>
-                <input type="text" name="brand" placeholder="Brand" id="brand" required>
-                <label for="name">
-                    <i class="fas fa-user"></i>
-                </label>
-                <input type="text" name="name" placeholder="Item Name" id="name" required>
-                <label for="release_date">
-                    <i class="fas fa-user"></i>
-                </label>
-                <input type="text" name="release_date" placeholder="Release Date" id="release_date" required>
-                <label for="abbreviation">
-                    <i class="fas fa-user"></i>
-                </label>
-                <input type="text" name="abbreviation" placeholder="Item Abbreviation" id="abbreviation" required>
-                <label for="cost">
-                    <i class="fas fa-user"></i>
-                </label>
-                <input type="text" name="cost" placeholder="Cost" id="cost" required>
-                <label for="disc_number">
-                    <i class="fas fa-user"></i>
-                </label>
-                <input type="text" name="disc_number" placeholder="Disc Number" id="disc_number" required>
-                <div class="msg">{{ msg }}</div>
-                <p style="padding:8px;"><input type="submit" value="Add Item To Inventory"></p>
-            </form>
-        </div>
+  <div class="addItem">
+    <form action="{{ url_for('addItem') }}" method="post" enctype="multipart/form-data" autocomplete="off">
+      <div class="form-group">
+        <h2><label for="name">Item Name</label></h2>
+        <input type="text" class="form-control form-control-lg" name="name" id="name" placeholder="Item Name Here">
+      </div>
+      <div class="form-group">
+        <label for="brand">Item Brand</label>
+        <input type="text" class="form-control" name="brand" id="brand" placeholder="Item Brand Here">
+      </div>
+      <div class="form-group">
+        <label for="discType">Type of Disc</label>
+        <input type="text" class="form-control" name="discType" id="discType" placeholder="Type of Disc">
+      </div>
+      <div class="form-group">
+        <label for="release_date">Release Date</label>
+        <input type="date" class="form-control" name="release_date" id="release_date" placeholder="Date">
+      </div>
+      <div class="form-group">
+        <label for="cost">Price</label>
+        <input type="text" class="form-control" name="cost" id="cost" placeholder="Input Decimal Number">
+      </div>
+      <div class="form-group">
+        <label for="descrip">Description</label>
+        <textarea class="form-control" id="descrip" name="descrip" rows="10" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="image">Product Image</label>
+        <input type="file" class="form-control" name="image" id="image" required>
+      </div>
+      <div class="msg">{{ msg }}</div>
+      <p style="padding:8px;"><input type="submit" value="Add Item To Inventory"></p>
+    </form>
+  </div>  
 </body>
 </html>
+

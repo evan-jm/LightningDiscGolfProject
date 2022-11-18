@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 from decimal import *
+from werkzeug.utils import secure_filename
+import os
 import re
 
 app = Flask(__name__)
@@ -10,13 +12,16 @@ app = Flask(__name__)
 app.secret_key = 'your secret key'
 
 # Enter your database connection details below
-app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_HOST'] = 'localhost'  
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'sqlroot!'
 app.config['MYSQL_DB'] = 'milestone2'
+UPLOAD_FOLDER='static/product-images/'
+app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER
 
 # Intialize MySQL
 mysql = MySQL(app)
+
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -154,15 +159,16 @@ def addItem():
     # Output message if something goes wrong...
     msg = ''
     # Check if "brand", "name", "releaseDate", "discNumber", "abbreviation", and "cost" POST requests exist (user submitted form)
-    if request.method == 'POST' and 'image' in request.form and 'brand' in request.form and 'name' in request.form and 'release_date' in request.form and 'disc_number' in request.form and 'abbreviation' in request.form and 'cost' in request.form:
+    if request.method == 'POST' and 'brand' in request.form and 'name' in request.form and 'release_date' in request.form and 'discType' in request.form and 'descrip' in request.form and 'cost' in request.form and 'image' in request.files:
         # Create variables for easy access
-        image = request.form['image']
         brand = request.form['brand']
         name = request.form['name']
         release_date = request.form['release_date']
-        disc_number = request.form['disc_number']
-        abbreviation = request.form['abbreviation']
+        discType = request.form['discType']
+        descrip= request.form['descrip']
         cost = request.form['cost']
+        image= request.files['image']
+        itemCode= "None"
 
         # Check if product exists using MySQL
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -171,25 +177,15 @@ def addItem():
         # If item exists show error and validation checks
         if item:
             msg = 'Item already exists!'
-        elif not re.match('^[A-Za-z0-9_-]*$', image):
-            msg = 'Image must contain only characters, numbers, and symbols!'
-        elif not re.match(r'[A-Za-z0-9]+', brand):
-            msg = 'Brand must contain only characters and numbers!'
-        elif not re.match(r'[A-Za-z0-9]+', name):
-            msg = 'Name must contain only characters and numbers!'
-        elif not re.match(r'[0-9]+', release_date):
-            msg = 'Release date must contain only numbers!'
-        # elif not re.match(r'[0-9]+', disc_number):
-        #   msg = 'Disc number must contain only numbers!'
-        elif not re.match(r'[A-Za-z0-9]+', abbreviation):
-            msg = 'Abbreviation must contain only characters and numbers!'
-        elif not re.match(r'[0-9]+', cost):
-            msg = 'Cost must contain only numbers!'
-        elif not brand or not name or not release_date or not disc_number:
+        elif not brand or not name or not release_date:
             msg = 'Please fill out the form!'
         else:
             # Item doesnt exists and the form data is valid, now insert new item into items table
-            cursor.execute('INSERT INTO Item (image, brand, name, release_date, disc_number, abbreviation, cost) VALUES ( %s, %s, %s, %s, %s, %s)', (image, brand, name, release_date, disc_number, abbreviation, cost,))
+            #Get name of image & save it to file directory
+            imageName= secure_filename(image.filename)
+            image.save(os.path.join(app.config['UPLOAD_FOLDER'],imageName))
+            saveName= imageName
+            cursor.execute('INSERT INTO Item (image, brand, name, disctype, description, release_date, itemcode, cost) VALUES ( %s, %s, %s, %s, %s, %s, %s, %s)', (saveName, brand, name, discType, descrip, release_date, itemCode, cost,))
             mysql.connection.commit()
             msg = 'Item successfully added'
 
@@ -199,6 +195,34 @@ def addItem():
     # Show registration form with message (if any)
     return render_template('addItem.html', msg=msg)
 
+
+@app.route('/updateItem/<string:id>', methods=['GET','POST'])
+def updateItem(id):
+    msg=""
+    
+    if request.method=='POST' and 'brand' in request.form and 'name' in request.form and 'release_date' in request.form and 'discType' in request.form and 'descrip' in request.form and 'cost' in request.form and 'image' in request.files:
+        name_to_update=request.form['name']
+        brand_to_update = request.form['brand']
+        release_date_to_update = request.form['release_date']
+        discType_to_update = request.form['discType']
+        descrip_to_update= request.form['descrip']
+        cost_to_update = request.form['cost']
+        image_to_update= request.files['image']
+        itemCode_to_update= "None"
+        imageName= secure_filename(image_to_update.filename)
+        image_to_update.save(os.path.join(app.config['UPLOAD_FOLDER'],imageName))
+        saveName= imageName
+        
+        try:
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('UPDATE Item SET image=%s, brand=%s, name=%s, disctype=%s, description=%s, release_date=%s, itemcode=%s, cost=%s WHERE ItemID=%s', (saveName, brand_to_update, name_to_update, discType_to_update, descrip_to_update, release_date_to_update, itemCode_to_update, cost_to_update,id))
+            mysql.connection.commit()
+            msg = 'Item successfully updated'
+        except:
+            msg='Error!  Looks like there was a problem...try again!'
+            render_template('updateItem.html',id=id,msg=msg)
+    return render_template('updateItem.html',id=id,msg=msg)
+    
 
 @app.route('/inventory.html', methods=['GET', 'POST'])
 def inventory():
@@ -219,40 +243,6 @@ def products():
     cursor.execute('SELECT * FROM Item')
     rows= cursor.fetchall()
     return render_template('products.html',items=rows)
-
-
-@app.route('/brands.html',methods=['GET', 'POST'])
-def brands():
-    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute('SELECT * FROM Brands')
-    brands= cursor.fetchall()
-    return render_template('brands.html',itembrands=brands)
-
-
-@app.route('/disctypes.html',methods=['GET', 'POST'])
-def disc_types():
-    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute('SELECT Brand_name FROM DiscTypes')
-    types= cursor.fetchall()
-    return render_template('disctypes.html',disctypes=types)
-
-
-@app.route('/products.html',methods=['GET', 'POST'])
-def fill_brands():
-    brands = 0
-    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute('Insert Into Brands (BrandName) Select Brand FROM Items;')
-
-    return brands
-
-
-@app.route('/brands.html',methods=['GET', 'POST'])
-def fill_disc_types():
-    disc_types = 0
-    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute('Insert Into DiscTypes (TypeName) Select DiscType FROM Items;')
-
-    return disc_types
 
 
 #Method for adding project to cart, uses array for each thing

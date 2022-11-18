@@ -1,34 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>Lightning Disc Golf Inventory</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-<a href="{{ url_for('adminHome') }}">Home Page></a>
+    <div class="topnav">
+        <a href="{{ url_for('Home') }}">Home</a>
+        <a href="{{ url_for('userLogin') }}">Login/Register</a>
+        <a href="{{ url_for('products') }}" class="active">All Products</a>
+        <a href="{{ url_for('showCart') }}">View Cart</a>
+        <a href="{{ url_for('userHome') }}">Profile</a>
+        <a href="#about">About</a>
+    </div>
 <table>
     <thead>
         <tr>
-            <th>Brand</th>
-            <th>Item Name</th>
-            <th>Release Date</th>
-            <th>Disc Number</th>
-            <th>Abbreviation</th>
-            <th>Cost</th>
+            <th style="width:fit-content">ID</th>
+            <th style="width:fit-content">Image</th>
+            <th style="width:fit-content">Brand</th>
+            <th style="width:fit-content">Item Name</th>
+            <th style="width:fit-content">Disc Type</th>
+            <th style="width:fit-content">Release Date</th>
+            <th style="width:fit-content">Item Code</th>
+            <th style="width:fit-content">Cost</th>
+            <th style="width:fit-content">Update</th>
+            <th style="width:fit-content">Delete</th>
         </tr>
     </thead>
     <tbody>
         {% for row in output_data %}
             <tr>
+                <th>{{row.ItemID}}</th>
+                <td> <img src="/static/product-images/{{ row.Image }} " alt="{{row.Name}}"></td>
                 <td>{{ row.Brand }}</td>
                 <td>{{ row.Name }}</td>
+                <td>{{ row.DiscType }}</td>
                 <td>{{ row.Release_Date}} </td>
-                <td>{{ row.Disc_Number }}</td>
-                <td>{{ row.Abbreviation }}</td>
+                <td>{{ row.ItemCode }}</td>
                 <td>{{ row.Cost }}</td>
+                <td><a href="{{ url_for('updateItem',id=row.ItemID)}}"><button type="button">Update</button></a></td>
+                <td><a href=#><button type="button">Delete</button></a></td>
             </tr>
         {% endfor %}
     </tbody>
 </table>
 </body>
+<style>
+    table{
+        background-color: white;
+    }
+</style>
 </html>

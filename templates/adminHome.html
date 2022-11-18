@@ -2,6 +2,14 @@
 {% extends 'layout.html' %}
 {% block title %}Home{% endblock %}
 
+<div class="topnav">
+    <a href="{{ url_for('Home') }}">Home</a>
+    <a href="{{ url_for('userLogin') }}">Login/Register</a>
+    <a href="{{ url_for('products') }}" class="active">All Products</a>
+    <a href="{{ url_for('showCart') }}">View Cart</a>
+    <a href="{{ url_for('userHome') }}">Profile</a>
+    <a href="#about">About</a>
+</div>
 {% block content %}
 
 <h2 class="h2">Hello, {{username}}!</h2>
