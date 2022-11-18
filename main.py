@@ -190,6 +190,12 @@ def addItem():
         else:
             # Item doesnt exists and the form data is valid, now insert new item into items table
             cursor.execute('INSERT INTO Item (image, brand, name, release_date, disc_number, abbreviation, cost) VALUES ( %s, %s, %s, %s, %s, %s)', (image, brand, name, release_date, disc_number, abbreviation, cost,))
+            cursor.execute('SELECT * FROM Brands WHERE BrandName = %s', (brand,))
+            item = None
+            item = cursor.fetchone()
+            if item :
+                msg = 'Item already exists'
+            cursor.execute('INSERT INTO Brands (brand) VALUES ( %s)', ( brand,))
             mysql.connection.commit()
             msg = 'Item successfully added'
 
