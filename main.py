@@ -189,6 +189,14 @@ def addItem():
             mysql.connection.commit()
             msg = 'Item successfully added'
 
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT * FROM Brands WHERE BrandName = %s', (brand,))
+            item = cursor.fetchone()
+            if item:
+                msg = 'brand already exists in brand'
+            cursor.execute('INSERT INTO Brands (BrandName) VALUES (%s)', (brand, ))
+            mysql.connection.commit()
+
     elif request.method == 'POST':
         # Form is empty... (no POST data)
         msg = 'Please fill out the form!'
