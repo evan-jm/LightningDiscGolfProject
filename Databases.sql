@@ -6,7 +6,7 @@ first_name varchar(10),
 last_name varchar(20),
 email varchar(20) not null,
 password varchar(20) not null,
-    constraint User_PK primary key(ID)
+constraint User_PK primary key(ID)
 );
 
 create table Admin
@@ -70,6 +70,7 @@ Brand_ID int not null auto_increment,
 BrandName varchar(15),
 constraint Brands_PK primary key(Brand_ID)
 );
+
 
 create table DiscTypes
 (
