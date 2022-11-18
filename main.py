@@ -224,7 +224,7 @@ def products():
 @app.route('/brands.html',methods=['GET', 'POST'])
 def brands():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute('SELECT Brand FROM Item')
+    cursor.execute('SELECT * FROM Brands')
     brands= cursor.fetchall()
     return render_template('brands.html',itembrands=brands)
 
@@ -232,9 +232,27 @@ def brands():
 @app.route('/disctypes.html',methods=['GET', 'POST'])
 def disc_types():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute('SELECT DiscType FROM Item')
+    cursor.execute('SELECT Brand_name FROM DiscTypes')
     types= cursor.fetchall()
     return render_template('disctypes.html',disctypes=types)
+
+
+@app.route('/products.html',methods=['GET', 'POST'])
+def fill_brands():
+    brands = 0
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('Insert Into Brands (BrandName) Select Brand FROM Items;')
+
+    return brands
+
+
+@app.route('/brands.html',methods=['GET', 'POST'])
+def fill_disc_types():
+    disc_types = 0
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('Insert Into DiscTypes (TypeName) Select DiscType FROM Items;')
+
+    return disc_types
 
 
 #Method for adding project to cart, uses array for each thing

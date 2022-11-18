@@ -62,3 +62,18 @@ constraint Order_Line_FK1 foreign key(Order_ID) references Orders(Order_ID),
 constraint Order_Line_FK2 foreign key(ItemID) references Item(ItemID),
 constraint Order_Line_PK primary key(Order_ID,ItemID)
 );
+
+
+create table Brands
+(
+Brand_ID int not null auto_increment,
+BrandName varchar(15),
+constraint Brands_PK primary key(Brand_ID)
+);
+
+create table DiscTypes
+(
+Type_ID int not null auto_increment,
+TypeName varchar(20),
+constraint DiscTypes_PK primary key(Type_ID)
+);
