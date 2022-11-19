@@ -188,7 +188,7 @@ def addItem():
             cursor.execute('INSERT INTO Item (image, brand, name, disctype, description, release_date, itemcode, cost) VALUES ( %s, %s, %s, %s, %s, %s, %s, %s)', (saveName, brand, name, discType, descrip, release_date, itemCode, cost,))
             mysql.connection.commit()
             msg = 'Item successfully added'
-
+            
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('SELECT * FROM Brands WHERE BrandName = %s', (brand,))
             item = cursor.fetchone()
