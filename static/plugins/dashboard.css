@@ -1,0 +1,22 @@
+.dashboard-heading-1
+{
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.dashboard-btn-1
+{
+    background: #28a745;
+    border: #28a745;
+    padding: 10px;
+    color: white;
+    height: 42px;
+    border-radius: 10px;
+
+}
+.dashboard-btn-1:focus
+{
+
+    outline:none;
+
+}

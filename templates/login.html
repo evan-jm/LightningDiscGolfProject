@@ -13,11 +13,11 @@
                 <a href="{{ url_for('userLogin') }}" class="active">Login</a>
                 <a href="{{ url_for('userRegister') }}">Register</a>
             </div>
-            <form action="{{ url_for('userLogin') }}" method="post">
+            <form action="{{ url_for('userLogin') }}" method="POST">
                 <label for="username">
                     <i class="fas fa-user"></i>
                 </label>
-                <input type="text" name="username" placeholder="Username" id="username" required>
+                <input type="text" name="username" placeholder="User Name" id="username" required>
                 <label for="password">
                     <i class="fas fa-lock"></i>
                 </label>

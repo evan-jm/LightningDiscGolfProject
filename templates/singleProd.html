@@ -6,12 +6,12 @@
    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.2.0/css/all.css">
 </head>
+<body>
 <div class="topnav">
       <a href="{{ url_for('Home') }}">Home</a>
       <a href="{{ url_for('userLogin') }}">Login/Register</a>
       <a href="{{ url_for('products') }}" class="active">All Products</a>
       <a href="{{ url_for('showCart') }}">View Cart</a>
-      <a href="{{ url_for('userHome') }}">Profile</a>
       <a href="#about">About</a>
 </div>
 
@@ -21,18 +21,11 @@
             <img src="/static/product-images/{{ item.Image }}" width="400" height="400">
         </div>
         <div class="col-md-7">
-            <h4>Product Name: {{item.Name}} </h4>
+            <h4>Product Name: {{item.Name}}</h4>
             <hr>
             <p> Product Price: {{item.Cost}}</p>
-            <p><b>Description</b></p>
+            <b>Description</b>
             <p>{{item.Description}}</p>
-            <hr>
-            <form action="/add" method="post">
-                <input type="hidden" name="code" value="{{item.ItemCode}}" >
-                <label>Quantity:</label>
-                <input type="number" name="quantity" id="" value="1" min="1">
-                <button type="submit" class="btn btn-sm btn-warning">Add To Cart</button>
-            </form>
         </div>
     </div>
 
@@ -42,31 +35,17 @@
           </div>
     </div>
 </div>
+</body>
 <style>
-    row
-    {
-        position: relative;
-    }
-    p
-    {
-        color: white;
-    }
-    label
-    {
-        color: white;
-    }
-    h4
-    {
-        color: white;
-    }
-    col-md-6
-    {
-        float: left;
-    }
-    col-md-7 
-    {
-        position: right top;
-    }
-            
+    .col-md-7 {
+                padding-top: 100px;
+            }
+            .pb-70 {
+                padding-bottom: 70px;
+            }
+            .section-header {
+                margin-bottom: 60px;
+                text-align: right;
+            }
 </style>
 </html>

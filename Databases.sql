@@ -6,6 +6,7 @@ first_name varchar(10),
 last_name varchar(20),
 email varchar(20) not null,
 password varchar(20) not null,
+status varchar(20) default 'customer'
 constraint User_PK primary key(ID)
 );
 
@@ -33,11 +34,11 @@ DiscType varchar(20),
 Description text,
 Release_Date date,
 ItemCode varchar(15) not null,
-Cost varchar(10) not null,                  
+Cost varchar(10) not null,
 constraint Item_PK primary key(ItemID)
 );
 
-insert into Item values 
+insert into Item values
 (1,'1.PNG','Discmania','Cloudbreaker','Distance', 'Item Description', null,'DMCB',50.00),
 (2,'1.PNG','Discmania','Full Tilt','Fairway', 'Item Description', null,'DMFT',20.00),
 (3,'1.PNG','Discmania','Breaker','Putter', 'Item Description', null,'DMBR',30.00);

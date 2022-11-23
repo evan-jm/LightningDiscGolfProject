@@ -6,13 +6,6 @@
 {% block content %}
 <h2>Home Page</h2>
 
-<h2 class="h2"> Welcome back, {{ username }}!</h2>
-<a href="{{ url_for('showCart') }}"><button type="button">View Cart</button></a>
+<p>Welcome back, {{ username }}!</p>
 {% endblock %}
-
-<style>
-    h2{
-        color: white;
-    }
-</style>
 </html>
