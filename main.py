@@ -256,13 +256,13 @@ def products():
 
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute('SELECT * FROM DiscTypes')
-    types = cursor.fetchall()
+    all_types = cursor.fetchall()
 
-    return render_template('products.html',items=rows, brands=all_brands, disc_types=types)
+    return render_template('products.html',items=rows, brands=all_brands, disc_types=all_types)
 
 
-@app.route('/brand/<int:ID>')
-#@app.route('/products.html',methods=['GET', 'POST'])
+@app.route('/brand/<int:ID>',methods=['GET', 'POST'])
+#@app.route('/products/brand/<int:ID>',methods=['GET', 'POST'])
 def get_brand(ID):
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute('SELECT * FROM Brands WHERE Brand_ID = %s', (ID,))
@@ -272,7 +272,49 @@ def get_brand(ID):
     cursor.execute('SELECT * FROM Brands')
     all_brands = cursor.fetchall()
 
-    return render_template('products.html', brand = brand, brands = all_brands)
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT BrandName FROM Brands WHERE Brand_ID = %s', (ID,))
+    brandName = cursor.fetchone()
+
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    my_list = list(brandName.values())
+    extracted_Brand_Name = my_list[0]
+    cursor.execute('SELECT * FROM Item WHERE Brand = %s', (extracted_Brand_Name,))
+    brandsort = cursor.fetchall()
+
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT * FROM DiscTypes')
+    all_types = cursor.fetchall()
+
+    return render_template('products.html', brand = brand, brands = all_brands, brandsort = brandsort, disc_types=all_types)
+
+
+@app.route('/type/<int:ID>',methods=['GET', 'POST'])
+#@app.route('/products/brand/<int:ID>',methods=['GET', 'POST'])
+def get_type(ID):
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT * FROM DiscTypes WHERE Type_ID = %s', (ID,))
+    type = cursor.fetchone()
+
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT * FROM DiscTypes')
+    all_types = cursor.fetchall()
+
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT TypeName FROM DiscTypes WHERE Type_ID = %s', (ID,))
+    typeName = cursor.fetchone()
+
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    my_list = list(typeName.values())
+    extracted_Type_Name = my_list[0]
+    cursor.execute('SELECT * FROM Item WHERE DiscType = %s', (extracted_Type_Name,))
+    typesort = cursor.fetchall()
+
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT * FROM Brands')
+    all_brands = cursor.fetchall()
+
+    return render_template('products.html', type = type, disc_types=all_types, typesort = typesort, brands = all_brands)
 
 
 #Method for adding project to cart, uses array for each thing

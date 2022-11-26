@@ -84,3 +84,9 @@ Type_ID int not null auto_increment,
 TypeName varchar(20),
 constraint DiscTypes_PK primary key(Type_ID)
 );
+
+insert into DiscTypes values
+(1, 'Distance'),
+(2, 'Fairway'),
+(3, 'Putter')
+;

@@ -55,7 +55,7 @@
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown2">
               {% for type in disc_types %}
-              <a class="dropdown-item" href="#">{{type.TypeName}}</a>
+              <a class="dropdown-item" href="{{url_for('get_type', ID = type.Type_ID)}}">{{type.TypeName}}</a>
               {% endfor %}
           </div>
       </li>
@@ -65,7 +65,7 @@
                 Cost
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown3">
-                {% for brand in itembrands %}
+                {% for brand in all_brands %}
                 <a class="dropdown-item" href="#">{{brand}}</a>
                 {% endfor %}
             </div>
@@ -89,8 +89,8 @@
         <div class="row">
 
         {% if brand %}
-            <div> blah blah blah blah </div>
-            {% for b in brand %}
+            <div> blah blah brand blah </div>
+            {% for b in brandsort %}
               <div class="col-sm-6 col-lg-3">
                <form method="post" action="/add">
                  <div class="single-publication">
@@ -113,6 +113,39 @@
                     </div>
                      <div class="add-to-cart">
                         <input type="hidden" name="code" value="{{ b.ItemCode }}"/>
+                        <input type="number" class="product-quantity" name="quantity" value="1" size="2" />
+                        <input type="submit" value="Add to Cart" class="default-btn" />
+                    </div>
+                 </div>
+               </form>
+              </div>
+            {% endfor %}
+
+        {% elif type %}
+            <div> blah type blah blah </div>
+            {% for t in typesort %}
+              <div class="col-sm-6 col-lg-3">
+               <form method="post" action="/add">
+                 <div class="single-publication">
+                    <figure style="height:100%; width: 100%; width:200px;">
+                        <a href="{{url_for('single_item_page',id=t.ItemID)}}">
+                            <img src="/static/product-images/{{ t.Image }} " alt="{{t.Name}}">
+                        </a>
+                    </figure>
+                     <div class="publication-content">
+                        <span class="type">{{ t.DiscType }}</span>
+                        <h3><a href="{{url_for('single_item_page',id=t.ItemID)}}">{{ t.Name }}</a></h3>
+                         <ul>
+                            <li><i class="icofont-star"></i></li>
+                            <li><i class="icofont-star"></i></li>
+                            <li><i class="icofont-star"></i></li>
+                            <li><i class="icofont-star"></i></li>
+                            <li><i class="icofont-star"></i></li>
+                        </ul>
+                        <h4 class="price">$ {{ t.Cost }}</h4>
+                    </div>
+                     <div class="add-to-cart">
+                        <input type="hidden" name="code" value="{{ t.ItemCode }}"/>
                         <input type="number" class="product-quantity" name="quantity" value="1" size="2" />
                         <input type="submit" value="Add to Cart" class="default-btn" />
                     </div>
