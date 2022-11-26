@@ -12,16 +12,15 @@ app = Flask(__name__)
 app.secret_key = 'your secret key'
 
 # Enter your database connection details below
-app.config['MYSQL_HOST'] = 'localhost'  
+app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'sqlroot!'
 app.config['MYSQL_DB'] = 'milestone2'
-UPLOAD_FOLDER='static/product-images/'
-app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER
+UPLOAD_FOLDER ='static/product-images/'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Intialize MySQL
 mysql = MySQL(app)
-
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -131,12 +130,12 @@ def userHome():
     # Check if user is loggedin
     if 'loggedin' in session:
         # User is loggedin show them the home page
-         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-         cursor.execute('SELECT * FROM Admin WHERE username = %s', (session['username'],))
-         account= cursor.fetchone()
-         if account:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM Admin WHERE username = %s', (session['username'],))
+        account = cursor.fetchone()
+        if account:
             return render_template('adminHome.html', username=session['username'])
-         else:
+        else:
             return render_template('userHome.html', username=session['username'])
     # User is not loggedin redirect to login page
     return redirect(url_for('userLogin'))
@@ -165,10 +164,10 @@ def addItem():
         name = request.form['name']
         release_date = request.form['release_date']
         discType = request.form['discType']
-        descrip= request.form['descrip']
+        descrip = request.form['descrip']
         cost = request.form['cost']
-        image= request.files['image']
-        itemCode= "None"
+        image = request.files['image']
+        itemCode = "None"
 
         # Check if product exists using MySQL
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -181,21 +180,20 @@ def addItem():
             msg = 'Please fill out the form!'
         else:
             # Item doesnt exists and the form data is valid, now insert new item into items table
-            #Get name of image & save it to file directory
-            imageName= secure_filename(image.filename)
-            image.save(os.path.join(app.config['UPLOAD_FOLDER'],imageName))
-            saveName= imageName
+            # Get name of image & save it to file directory
+            imageName = secure_filename(image.filename)
+            image.save(os.path.join(app.config['UPLOAD_FOLDER'], imageName))
+            saveName = imageName
             cursor.execute('INSERT INTO Item (image, brand, name, disctype, description, release_date, itemcode, cost) VALUES ( %s, %s, %s, %s, %s, %s, %s, %s)', (saveName, brand, name, discType, descrip, release_date, itemCode, cost,))
             mysql.connection.commit()
             msg = 'Item successfully added'
 
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('SELECT * FROM Brands WHERE BrandName = %s', (brand,))
-            item = cursor.fetchone()
-            if item:
-                msg = 'brand already exists in brand'
-            cursor.execute('INSERT INTO Brands (BrandName) VALUES (%s)', (brand, ))
-            mysql.connection.commit()
+            brand = cursor.fetchone()
+            if brand is None:
+                cursor.execute('INSERT INTO Brands (BrandName) VALUES (%s)', (brand,))
+                mysql.connection.commit()
 
     elif request.method == 'POST':
         # Form is empty... (no POST data)
@@ -204,33 +202,52 @@ def addItem():
     return render_template('addItem.html', msg=msg)
 
 
-@app.route('/updateItem/<string:id>', methods=['GET','POST'])
+@app.route('/updateItem/<string:id>', methods=['GET', 'POST'])
 def updateItem(id):
-    msg=""
-    
-    if request.method=='POST' and 'brand' in request.form and 'name' in request.form and 'release_date' in request.form and 'discType' in request.form and 'descrip' in request.form and 'cost' in request.form and 'image' in request.files:
-        name_to_update=request.form['name']
-        brand_to_update = request.form['brand']
-        release_date_to_update = request.form['release_date']
-        discType_to_update = request.form['discType']
-        descrip_to_update= request.form['descrip']
-        cost_to_update = request.form['cost']
-        image_to_update= request.files['image']
-        itemCode_to_update= "None"
-        imageName= secure_filename(image_to_update.filename)
-        image_to_update.save(os.path.join(app.config['UPLOAD_FOLDER'],imageName))
-        saveName= imageName
-        
+    msg = ""
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT * FROM Item WHERE ItemID = %s', (id,))
+    item = cursor.fetchone()
+
+    #Valuecheck method checks if there is value to update, otherwise sets it to current value
+    if request.method == 'POST' and 'brand' in request.form and 'name' in request.form and 'release_date' in request.form and 'discType' in request.form and 'descrip' in request.form and 'cost' in request.form:
+        name = valueCheck(request.form['name'], item['Name'])
+        brand = valueCheck(request.form['brand'], item['Brand'])
+        date = valueCheck(request.form['release_date'], item['Release_Date'])
+        type = valueCheck(request.form['discType'], item['DiscType'])
+        descrip = valueCheck(request.form['descrip'], item['Description'])
+        cost = valueCheck(request.form['cost'], item['Cost'])
+        itemCode = "None"
+        image= request.files['image'] if 'image' in request.files else None
+        if image is None:
+            image= item['Image']
+        else:
+            imageName = secure_filename(image.filename)
+            image.save(os.path.join(app.config['UPLOAD_FOLDER'], imageName))
+
         try:
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('UPDATE Item SET image=%s, brand=%s, name=%s, disctype=%s, description=%s, release_date=%s, itemcode=%s, cost=%s WHERE ItemID=%s', (saveName, brand_to_update, name_to_update, discType_to_update, descrip_to_update, release_date_to_update, itemCode_to_update, cost_to_update,id))
+            cursor.execute('UPDATE Item SET image=%s, brand=%s, name=%s, disctype=%s, description=%s, release_date=%s, itemcode=%s, cost=%s WHERE ItemID=%s', (imageName, brand, name, type, descrip, date, itemCode, cost, id))
             mysql.connection.commit()
             msg = 'Item successfully updated'
         except:
-            msg='Error!  Looks like there was a problem...try again!'
-            render_template('updateItem.html',id=id,msg=msg)
-    return render_template('updateItem.html',id=id,msg=msg)
-    
+            msg = 'Error!  Looks like there was a problem...try again!'
+            render_template('updateItem.html', id=id, msg=msg,item=item)
+    return render_template('updateItem.html', id=id, msg=msg, item=item)
+
+
+def valueCheck(field, itemfield):
+    if field=="":
+        field=itemfield
+    return field
+
+
+@app.route('/inventory.html/<string:id>', methods=['GET', 'POST'])
+def deleteItem(id):
+   cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+   cursor.execute('DELETE FROM Item WHERE ItemID = %s', (id,))
+   mysql.connection.commit()
+   return redirect(url_for('inventory'))
 
 @app.route('/inventory.html', methods=['GET', 'POST'])
 def inventory():
@@ -244,16 +261,40 @@ def inventory():
 def showCart():
     return render_template('cart.html')
 
-#Will be moved, method for viewing products
-@app.route('/products.html',methods=['GET', 'POST'])
+
+# Will be moved, method for viewing products
+@app.route('/products.html', methods=['GET', 'POST'])
 def products():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute('SELECT * FROM Item')
-    rows= cursor.fetchall()
-    return render_template('products.html',items=rows)
+    rows = cursor.fetchall()
+
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT * FROM Brands')
+    all_brands = cursor.fetchall()
+
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT * FROM DiscTypes')
+    types = cursor.fetchall()
+
+    return render_template('products.html', items=rows, brands=all_brands, disc_types=types)
 
 
-#Method for adding project to cart, uses array for each thing
+@app.route('/brand/<int:ID>')
+# @app.route('/products.html',methods=['GET', 'POST'])
+def get_brand(ID):
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT * FROM Brands WHERE Brand_ID = %s', (ID,))
+    brand = cursor.fetchone()
+
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT * FROM Brands')
+    all_brands = cursor.fetchall()
+
+    return render_template('products.html', brand=brand, brands=all_brands)
+
+
+# Method for adding project to cart, uses array for each thing
 @app.route('/add', methods=['POST'])
 def add_product_to_cart():
     cursor = None
@@ -266,8 +307,8 @@ def add_product_to_cart():
             cursor.execute("SELECT * FROM Item WHERE ItemCode=%s", (_code,))
             row = cursor.fetchone()
 
-            costStr=row['Cost']
-            cost= Decimal(costStr)
+            costStr = row['Cost']
+            cost = Decimal(costStr)
             itemArray = {row['ItemCode']: {'Name': row['Name'], 'ItemCode': row['ItemCode'], 'quantity': _quantity, 'Cost': cost, 'Image': row['Image'], 'total_price': _quantity * cost}}
 
             all_total_price = 0
@@ -307,7 +348,7 @@ def add_product_to_cart():
         cursor.close()
 
 
-#Method to empty the cart
+# Method to empty the cart
 @app.route('/empty')
 def empty_cart():
     try:
@@ -317,7 +358,7 @@ def empty_cart():
         print(e)
 
 
-#Method to delete product from the cart
+# Method to delete product from the cart
 @app.route('/delete/<string:code>')
 def delete_product(code):
     try:
@@ -347,8 +388,8 @@ def delete_product(code):
         print(e)
 
 
-#Method to merge arrays of items
-def array_merge( first_array , second_array ):
+# Method to merge arrays of items
+def array_merge(first_array, second_array):
     if isinstance(first_array, list) and isinstance(second_array, list):
         return first_array + second_array
     elif isinstance(first_array, dict) and isinstance(second_array, dict):
@@ -361,10 +402,9 @@ def array_merge( first_array , second_array ):
 @app.route('/products/<string:id>')
 def single_item_page(id):
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute('SELECT * FROM Item WHERE ItemID= %s',id)
-    item= cursor.fetchone()
-    return render_template('singleProd.html',item=item)
-
+    cursor.execute('SELECT * FROM Item WHERE ItemID= %s', id)
+    item = cursor.fetchone()
+    return render_template('singleProd.html', item=item)
 
 
 if __name__ == '__main__':
