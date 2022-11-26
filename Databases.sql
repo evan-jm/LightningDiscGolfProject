@@ -71,6 +71,12 @@ BrandName varchar(15),
 constraint Brands_PK primary key(Brand_ID)
 );
 
+insert into Brands values
+(1, 'Discmania'),
+(2, 'Innova'),
+(3, 'Infinite')
+;
+
 
 create table DiscTypes
 (

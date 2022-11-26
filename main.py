@@ -14,14 +14,13 @@ app.secret_key = 'your secret key'
 # Enter your database connection details below
 app.config['MYSQL_HOST'] = 'localhost'  
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'sqlroot!'
+app.config['MYSQL_PASSWORD'] = 'root'
 app.config['MYSQL_DB'] = 'milestone2'
 UPLOAD_FOLDER='static/product-images/'
 app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER
 
 # Intialize MySQL
 mysql = MySQL(app)
-
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -250,7 +249,30 @@ def products():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute('SELECT * FROM Item')
     rows= cursor.fetchall()
-    return render_template('products.html',items=rows)
+
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT * FROM Brands')
+    all_brands = cursor.fetchall()
+
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT * FROM DiscTypes')
+    types = cursor.fetchall()
+
+    return render_template('products.html',items=rows, brands=all_brands, disc_types=types)
+
+
+@app.route('/brand/<int:ID>')
+#@app.route('/products.html',methods=['GET', 'POST'])
+def get_brand(ID):
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT * FROM Brands WHERE Brand_ID = %s', (ID,))
+    brand = cursor.fetchone()
+
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT * FROM Brands')
+    all_brands = cursor.fetchall()
+
+    return render_template('products.html', brand = brand, brands = all_brands)
 
 
 #Method for adding project to cart, uses array for each thing
