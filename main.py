@@ -194,8 +194,18 @@ def addItem():
             item = cursor.fetchone()
             if item:
                 msg = 'brand already exists in brand'
-            cursor.execute('INSERT INTO Brands (BrandName) VALUES (%s)', (brand, ))
-            mysql.connection.commit()
+            else:
+                cursor.execute('INSERT INTO Brands (BrandName) VALUES (%s)', (brand, ))
+                mysql.connection.commit()
+
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT * FROM DiscTypes WHERE TypeName = %s', (discType,))
+            item = cursor.fetchone()
+            if item:
+                msg = 'DiscType already exists in DiscTypes'
+            else:
+                cursor.execute('INSERT INTO DiscTypes (TypeName) VALUES (%s)', (discType,))
+                mysql.connection.commit()
 
     elif request.method == 'POST':
         # Form is empty... (no POST data)
