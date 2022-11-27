@@ -71,8 +71,8 @@
             </div>
         </li>
     </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+    <form class="form-inline my-2 my-lg-0" method="POST" action="{{url_for('search')}}">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" name="search_string" aria-label="Search">
       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
   </div>
@@ -89,7 +89,6 @@
         <div class="row">
 
         {% if brand %}
-            <div> blah blah brand blah </div>
             {% for b in brandsort %}
               <div class="col-sm-6 col-lg-3">
                <form method="post" action="/add">
@@ -122,7 +121,6 @@
             {% endfor %}
 
         {% elif type %}
-            <div> blah type blah blah </div>
             {% for t in typesort %}
               <div class="col-sm-6 col-lg-3">
                <form method="post" action="/add">

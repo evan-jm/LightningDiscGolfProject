@@ -8,6 +8,7 @@ import re
 
 app = Flask(__name__)
 
+
 # Change this to your secret key (can be anything, it's for extra protection)
 app.secret_key = 'your secret key'
 
@@ -262,7 +263,6 @@ def products():
 
 
 @app.route('/brand/<int:ID>',methods=['GET', 'POST'])
-#@app.route('/products/brand/<int:ID>',methods=['GET', 'POST'])
 def get_brand(ID):
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute('SELECT * FROM Brands WHERE Brand_ID = %s', (ID,))
@@ -315,6 +315,31 @@ def get_type(ID):
     all_brands = cursor.fetchall()
 
     return render_template('products.html', type = type, disc_types=all_types, typesort = typesort, brands = all_brands)
+
+
+@app.route('/products/search', methods=['GET', 'POST'])
+def search():
+
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT * FROM Brands')
+    all_brands = cursor.fetchall()
+
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT * FROM DiscTypes')
+    all_types = cursor.fetchall()
+
+    if request.method == 'POST':
+        form = request.form
+        search_value = form['search_string']
+        search = "%{0}%".format(search_value)
+
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM Item WHERE Brand LIKE %s OR DiscType LIKE %s OR Name LIKE %s', (search, search, search))
+        data = cursor.fetchall()
+
+        return render_template('products.html', items=data, brands=all_brands, disc_types=all_types)
+    else:
+        return redirect(url_for('products'))
 
 
 #Method for adding project to cart, uses array for each thing
