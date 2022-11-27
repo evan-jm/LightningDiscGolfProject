@@ -177,10 +177,8 @@
                         <h4 class="price">$ {{ item.Cost }}</h4>
                     </div>
                      <div class="add-to-cart">
-                        <input type="hidden" name="code" value="{{ item.ItemCode }}"/>
-                        <input type="number" class="product-quantity" name="quantity" value="1" size="2" />
-                        <input type="submit" value="Add to Cart" class="default-btn" />
-                    </div>                    
+                        <a class="btn btn-primary" href="{{url_for('single_item_page',id=item.ItemID)}}" role="button">View Item</a>
+                    </div>
                  </div>
              </form>
             </div>

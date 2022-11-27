@@ -7,11 +7,12 @@
 <body>
     <div class="topnav">
         <a href="{{ url_for('Home') }}">Home</a>
-        <a href="{{ url_for('userLogin') }}">Login/Register</a>
-        <a href="{{ url_for('products') }}" class="active">All Products</a>
-        <a href="{{ url_for('showCart') }}">View Cart</a>
-        <a href="{{ url_for('userHome') }}">Profile</a>
-        <a href="#about">About</a>
+    <a href="{{ url_for('userLogin') }}">Login/Register</a>
+    <a href="{{ url_for('addItem') }}">Add An Item</a>
+    <a href="{{ url_for('inventory') }}" class="active">View Inventory</a>
+    <a href="{{ url_for('updateItem',id=id) }}">Update Item</a>
+    <a href="{{ url_for('userHome') }}">Profile</a>
+    <a href="#about">About</a>
     </div>
 <table>
     <thead>
@@ -32,7 +33,7 @@
         {% for row in output_data %}
             <tr>
                 <th>{{row.ItemID}}</th>
-                <td> <img src="/static/product-images/{{ row.Image }} " alt="{{row.Name}}"></td>
+                <td> <img src="/static/product-images/{{ row.Image }} " alt="{{row.Name}}" width="100" height="100"></td>
                 <td>{{ row.Brand }}</td>
                 <td>{{ row.Name }}</td>
                 <td>{{ row.DiscType }}</td>
@@ -40,7 +41,7 @@
                 <td>{{ row.ItemCode }}</td>
                 <td>{{ row.Cost }}</td>
                 <td><a href="{{ url_for('updateItem',id=row.ItemID)}}"><button type="button">Update</button></a></td>
-                <td><a href=#><button type="button">Delete</button></a></td>
+                <td><a href="{{ url_for('deleteItem',id=row.ItemID)}}"><button type="button">Delete</button></a></td>
             </tr>
         {% endfor %}
     </tbody>
