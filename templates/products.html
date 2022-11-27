@@ -65,15 +65,15 @@
                 Cost
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown3">
-                {% for brand in all_brands %}
-                <a class="dropdown-item" href="#">{{brand}}</a>
-                {% endfor %}
+                <a class="dropdown-item" href="{{url_for('hightolow')}}">High to Low</a>
+                <a class="dropdown-item" href="{{url_for('lowtohigh')}}">Low to High</a>
             </div>
         </li>
     </ul>
     <form class="form-inline my-2 my-lg-0" method="POST" action="{{url_for('search')}}">
       <input class="form-control mr-sm-2" type="search" placeholder="Search" name="search_string" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      <button type="submit" style="color:#3FA2F5"> GO!</button>
+        <!--class="btn btn-outline-success my-2 my-sm-0"-->
     </form>
   </div>
 </nav>
