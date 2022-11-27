@@ -218,12 +218,12 @@ def updateItem(id):
         descrip = valueCheck(request.form['descrip'], item['Description'])
         cost = valueCheck(request.form['cost'], item['Cost'])
         itemCode = "None"
-        image= request.files['image'] if 'image' in request.files else None
-        if image is None:
-            image= item['Image']
-        else:
+        try:
+            image= request.files['image'] if 'image' in request.files else None
             imageName = secure_filename(image.filename)
             image.save(os.path.join(app.config['UPLOAD_FOLDER'], imageName))
+        except:
+            imageName=item['Image']
 
         try:
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
