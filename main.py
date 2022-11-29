@@ -195,8 +195,8 @@ def addItem():
             
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('SELECT * FROM Brands WHERE BrandName = %s', (brand,))
-            brand = cursor.fetchone()
-            if brand is None:
+            thisbrand = cursor.fetchone()
+            if thisbrand is None:
                 cursor.execute('INSERT INTO Brands (BrandName) VALUES (%s)', (brand,))
                 mysql.connection.commit()
 
