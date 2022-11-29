@@ -15,7 +15,7 @@ app.secret_key = 'your secret key'
 # Enter your database connection details below
 app.config['MYSQL_HOST'] = 'localhost'  
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'Solodyn23'
+app.config['MYSQL_PASSWORD'] = 'root'
 app.config['MYSQL_DB'] = 'milestone2'
 UPLOAD_FOLDER='static/product-images/'
 app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER
