@@ -190,12 +190,21 @@ def addItem():
             cursor.execute('INSERT INTO Item (image, brand, name, disctype, description, release_date, itemcode, cost) VALUES ( %s, %s, %s, %s, %s, %s, %s, %s)', (saveName, brand, name, discType, descrip, release_date, itemCode, cost,))
             mysql.connection.commit()
             msg = 'Item successfully added'
+
+
             
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('SELECT * FROM Brands WHERE BrandName = %s', (brand,))
             brand = cursor.fetchone()
             if brand is None:
                 cursor.execute('INSERT INTO Brands (BrandName) VALUES (%s)', (brand,))
+                mysql.connection.commit()
+
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT * FROM DiscTypes WHERE TypeName = %s', (discType,))
+            type = cursor.fetchone()
+            if type is None:
+                cursor.execute('INSERT INTO DiscTypes (TypeName) VALUES (%s)', (discType,))
                 mysql.connection.commit()
 
     elif request.method == 'POST':
