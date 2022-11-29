@@ -1,96 +1,84 @@
-<!DOCTYPE html>
-<html>
-  <head>
-     <!-- meta charset="utf-8" -->
-     <title>Index</title>
-     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-     <!-- link rel="stylesheet" href="style.css" -->
-     <!-- link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" -->
-     <!-- link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" -->
-  </head>
+{% extends 'base.html' %}
 
-  <body>
-   <div class="topnav">
- <a href="{{ url_for('Home') }}" class="active">Home</a>
- <a href="{{ url_for('userLogin') }}">Login/Register</a>
- <a href="{{ url_for('products') }}">All Products</a>
- <a href="{{url_for('showCart') }}">View Cart</a>
- <a href="{{ url_for('userHome') }}">Profile</a>
- <a href="#about">About</a>
-</div>
+{% block title %}
+Home
+{% endblock %}
 
+{% block content %}
 <div class="Home">
-
-   <h1 class="h1"><img src="https://cdn.shopify.com/s/files/1/0623/4849/2977/files/My_project-1_6.png?v=1660857053&width=500" style="height: 35%; width:35%"> </p></h1>
+  <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    </div>
+    <div class="carousel-inner">
+      <div class="carousel-item active"> <img src="https://cdn.shopify.com/s/files/1/0623/4849/2977/files/Cloud_Breaker_DMNET_MAIN_2.jpg?v=1666188944&width=1000" class="d-block w-100" alt="..."> </div>
+      <div class="carousel-item"> <img src="https://cdn.shopify.com/s/files/1/0623/4849/2977/files/FotoJet.jpg?v=1666188944&width=1000" class="d-block w-100" alt="..."> </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev"> <span class="carousel-control-prev-icon" aria-hidden="true"></span> <span class="visually-hidden">Previous</span> </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next"> <span class="carousel-control-next-icon" aria-hidden="true"></span> <span class="visually-hidden">Next</span> </button>
+  </div>
   <hr>
-<h2 class="h2">Available Now!</h2>
-
-<div class="row">
- <div class="column">
-   <div class="content">
-     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJAnMHalR4d_ukobhXsvwgS9DBfeHTs2stXw&usqp=CAU" height="200px" width="75px" alt="Disc" style="height: 100%; width:100%">
-     <h3><p style="color:white;">Disc</h3>
-     <p style="color:blue;">we will have links to buy items here</p>
-   </div>
- </div>
- <div class="column">
-   <div class="content">
-     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9hKWOvb2UkUx7M1CtTopVRLDxe2norIpZqA&usqp=CAU" height="200px" width="75px" alt="Disc" style="height: 100%; width:100%">
-     <h3><p style="color:white;">Disc</h3>
-     <p style="color:#3FA2F5;">purchase</p>
-   </div>
- </div>
- <div class="column">
-   <div class="content">
-     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKZisHEDTwIxBHsN0DGboZJyFvv5ZQ--PXHQ&usqp=CAU" height="200px" width="75px" alt="Disc" style="height: 100%; width:100%">
-     <h3><p style="color:white;">Disc</h3>
-     <p style="color:blue;">purchase</p>
-   </div>
- </div>
- <div class="column">
-   <div class="content">
-     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSISggQyOT7spz8hENX-iYmXYx5ZEbhzqmBrw&usqp=CAU" height="200px" width="75px" alt="Discs n bag" style="height: 100%; width:100%">
-     <h3><p style="color:white;">Disc</h3>
-     <p style="color:#3FA2F5;">purchase</p>
-   </div>
- </div>
+  <h2 class="h2">Available Now!</h2>
+  <div class="row">
+    <div class="column">
+      <div class="card border-dark mb-3" style="width: 15rem;"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJAnMHalR4d_ukobhXsvwgS9DBfeHTs2stXw&usqp=CAU" height="200px" width="75px" alt="Disc" style="width:100%" class="card-img-top" >
+        <div class="card-body">
+          <h5 class="card-title">Disc</h5>
+          <p class="card-text">You can add some text here</p> <a href="#" class="btn btn-primary">Any Link</a> </div>
+      </div>
+    </div>
+    <div class="column">
+      <div class="card border-dark mb-3" style="width: 15rem;"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9hKWOvb2UkUx7M1CtTopVRLDxe2norIpZqA&usqp=CAU" height="200px" width="75px" alt="Disc" style="width:100%" class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">Disc</h5>
+          <p class="card-text">You can add some text here</p> <a href="#" class="btn btn-primary">Any Link</a> </div>
+      </div>
+    </div>
+    <div class="column">
+      <div class="card border-dark mb-3" style="width: 15rem;"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKZisHEDTwIxBHsN0DGboZJyFvv5ZQ--PXHQ&usqp=CAU" height="200px" width="75px" alt="Disc" style="width:100%" class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">Disc</h5>
+          <p class="card-text">You can add some text here</p> <a href="#" class="btn btn-primary">Any Link</a> </div>
+      </div>
+    </div>
+    <div class="column">
+      <div class="card border-dark mb-3" style="width: 15rem;"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSISggQyOT7spz8hENX-iYmXYx5ZEbhzqmBrw&usqp=CAU" height="200px" width="75px" alt="Disc" style="width:100%" class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">Disc</h5>
+          <p class="card-text">You can add some text here</p> <a href="#" class="btn btn-primary">Any Link</a> </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+      <div class="column">
+        <div class="card border-dark mb-3" style="width: 15rem;"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJAnMHalR4d_ukobhXsvwgS9DBfeHTs2stXw&usqp=CAU" height="200px" width="75px" alt="Disc" style="width:100%" class="card-img-top">
+          <div class="card-body">
+            <h5 class="card-title">Disc</h5>
+            <p class="card-text">You can add some text here</p> <a href="#" class="btn btn-primary">Any Link</a> </div>
+        </div>
+      </div>
+      <div class="column">
+        <div class="card border-dark mb-3" style="width: 15rem;"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9hKWOvb2UkUx7M1CtTopVRLDxe2norIpZqA&usqp=CAU" height="200px" width="75px" alt="Disc" style="width:100%" class="card-img-top">
+          <div class="card-body">
+            <h5 class="card-title">Disc</h5>
+            <p class="card-text">You can add some text here</p> <a href="#" class="btn btn-primary">Any Link</a> </div>
+        </div>
+      </div>
+      <div class="column">
+        <div class="card border-dark mb-3" style="width: 15rem;"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKZisHEDTwIxBHsN0DGboZJyFvv5ZQ--PXHQ&usqp=CAU" height="200px" width="75px" alt="Disc" style="width:100%" class="card-img-top">
+          <div class="card-body">
+            <h5 class="card-title">Disc</h5>
+            <p class="card-text">You can add some text here</p> <a href="#" class="btn btn-primary">Any Link</a> </div>
+        </div>
+      </div>
+      <div class="column">
+        <div class="card border-dark mb-3" style="width: 15rem;"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSISggQyOT7spz8hENX-iYmXYx5ZEbhzqmBrw&usqp=CAU" height="200px" width="75px" alt="Disc" style="width:100%" class="card-img-top">
+          <div class="card-body">
+            <h5 class="card-title">Disc</h5>
+            <p class="card-text">You can add some text here</p> <a href="#" class="btn btn-primary">Any Link</a> </div>
+        </div>
+      </div>
+    </div>
 </div>
-
-   <div class="row">
- <div class="column">
-   <div class="content">
-     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJAnMHalR4d_ukobhXsvwgS9DBfeHTs2stXw&usqp=CAU" height="200px" width="75px" alt="Disc" style="height: 100%; width:100%">
-     <h3><p style="color:white;">Disc</h3>
-     <p style="color:blue;">more links, more items</p>
-   </div>
- </div>
- <div class="column">
-   <div class="content">
-     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9hKWOvb2UkUx7M1CtTopVRLDxe2norIpZqA&usqp=CAU" height="200px" width="75px" alt="Disc" style="height: 100%; width:100%">
-     <h3><p style="color:white;">Disc</h3>
-     <p style="color:#3FA2F5;">purchase</p>
-   </div>
- </div>
- <div class="column">
-   <div class="content">
-     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKZisHEDTwIxBHsN0DGboZJyFvv5ZQ--PXHQ&usqp=CAU" height="200px" width="75px" alt="Disc" style="height: 100%; width:100%">
-     <h3><p style="color:white;">Disc</h3>
-     <p style="color:blue;">purchase</p>
-   </div>
- </div>
- <div class="column">
-   <div class="content">
-     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSISggQyOT7spz8hENX-iYmXYx5ZEbhzqmBrw&usqp=CAU" height="200px" width="75px" alt="Discs n bag" style="height: 100%; width:100%">
-     <h3><p style="color:white;">Disc</h3>
-     <p style="color:#3FA2F5;">purchase</p>
-   </div>
- </div>
-</div>
-
-</div>
-</body>
-  </body>
-   <footer class="f1">
-       <p class="f1"><a href="{{ url_for('Contact') }}">Contact Us</a></p>
-   </footer>
-</html>
+{% endblock %}

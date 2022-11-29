@@ -1,0 +1,301 @@
+* {
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "segoe ui", roboto, oxygen, ubuntu, cantarell, "fira sans", "droid sans", "helvetica neue", Arial, sans-serif;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    background-color: #435165;
+    margin: 0;
+
+}
+
+body2 {
+    background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQk0xaB6aFHcvY9KVxtELPtVKGIvJ3J0FyOcg&usqp=CAU');
+    background-repeat: repeat;
+    padding: 25px;
+}
+
+.login, .register {
+    width: 750px;
+    background-color: #ffffff;
+    box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);
+    margin: 150px auto;
+}
+.login h1, .register h1 {
+    background-color: black;
+    text-align: center;
+    color: white;
+    font-size: 24px;
+    padding: 20px 0 20px 0;
+    border-bottom: 1px solid #dee0e4;
+}
+.login .links, .register .links {
+    display: flex;
+    padding: 0 15px;
+}
+.login .links a, .register .links a {
+    color: #adb2ba;
+    text-decoration: none;
+    display: inline-flex;
+    padding: 0 10px 10px 10px;
+    font-weight: bold;
+}
+.login .links a:hover, .register .links a:hover {
+    color: #9da3ac;
+}
+.login .links a.active, .register .links a.active {
+    border-bottom: 3px solid #3274d6;
+    color: black;
+}
+.login form, .register form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-top: 20px;
+}
+.login form label, .register form label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    background-color: #3FA2F5;
+    color: #ffffff;
+}
+.login form input[type="password"], .login form input[type="text"], .login form input[type="email"], .register form input[type="password"], .register form input[type="text"], .register form input[type="email"] {
+    width: 310px;
+    height: 50px;
+    border: 1px solid #dee0e4;
+    margin-bottom: 20px;
+    padding: 10 15px;
+}
+.login form input[type="submit"], .register form input[type="submit"] {
+    width: 100%;
+    padding: 15px;
+    margin-top: 20px;
+    background-color: #3FA2F5;
+    border: 0;
+    cursor: pointer;
+    font-weight: bold;
+    color: black;
+    transition: background-color 0.2s;
+}
+.login form input[type="submit"]:hover, .register form input[type="submit"]:hover {
+    background-color: #2868c7;
+    transition: background-color 0.2s;
+}
+
+
+/***************************************************
+
+
+.navtop {
+    background-color: #2f3947;
+    height: 60px;
+    width: 100%;
+    border: 0;
+}
+.navtop div {
+    display: flex;
+    margin: 0 auto;
+    width: 1000px;
+    height: 100%;
+}
+.navtop div h1, .navtop div a {
+    display: inline-flex;
+    align-items: center;
+}
+.navtop div h1 {
+    flex: 1;
+    font-size: 24px;
+    padding: 0;
+   margin: 0;
+    color: #eaebed;
+    font-weight: normal;
+}
+.navtop div a {
+    padding: 0 20px;
+    text-decoration: none;
+    color: #c1c4c8;
+    font-weight: bold;
+}
+.navtop div a i {
+    padding: 2px 8px 0 0;
+}
+.navtop div a:hover {
+    color: #eaebed;
+}
+body.loggedin {
+    background-color: #f3f4f7;
+}
+.content {
+    width: 1000px;
+    margin: 0 auto;
+}
+.content h2 {
+    margin: 0;
+    padding: 25px 0;
+    font-size: 22px;
+    border-bottom: 1px solid #e0e0e3;
+    color: #4a536e;
+}
+.content > p, .content > div {
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+    margin: 25px 0;
+    padding: 25px;
+  background-color: #fff;
+}
+.content > p table td, .content > div table td {
+  padding: 5px;
+}
+.content > p table td:first-child, .content > div table td:first-child {
+  font-weight: bold;
+  color: #4a536e;
+  padding-right: 15px;
+}
+.content > div p {
+  padding: 5px;
+  margin: 0 0 10px 0;
+}
+
+
+****************************************/
+
+/*
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+*/
+.topnav {
+  overflow: hidden;
+  background-color: #3FA2F5;
+}
+
+.topnav a {
+  float: left;
+  color: #FDFDFE;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #D5E7F6;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #666C71;
+  color: white;
+}
+
+
+* {
+  box-sizing: border-box;
+}
+
+/*
+
+body {
+  background-color: white;
+  style=color:blue;
+  padding: 20px;
+  font-family: Arial;
+}
+
+*/
+
+
+/* Center website */
+.main {
+  max-width: 1000px;
+  margin: auto;
+}
+
+.h1 {
+  color:#3FA2F5;
+  margin-top: 0;
+  text-align:center;
+  background-image: linear-gradient(45deg, black, black);
+  background-color: black;
+  font-size: 50px;
+  word-break: break-all;
+}
+
+.h2 {
+   margin-bottom: 0;
+   color:white;
+   text-align:center;
+   font-size: 28px;
+}
+
+.h3 {
+   margin-top: 0;
+   color:white;
+   background-color:black;
+   text-align:left;
+   font-size: 28px;
+   padding:20px;
+}
+
+.row {
+  margin-top: 0;
+  margin: 16px 28px;
+  padding: 0px;
+}
+
+/* Add padding BETWEEN each column (if you want)
+.row,
+.row > */
+.column {
+  padding: 48px;
+}
+
+/* Create four equal columns that floats next to each other */
+.column {
+  float: left;
+  width: 25%;
+}
+
+/* Clear floats after rows */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Content */
+.content {
+  background-color: black;
+  padding: 14px;
+}
+
+/* Responsive layout - makes a two column-layout instead of four columns */
+@media screen and (max-width: 900px) {
+  .column {
+    width: 50%;
+  }
+}
+
+/* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .column {
+    width: 100%;
+  }
+}
+
+.f1{
+    font-family: "Fantasy", "Copperplate", monospace;
+    margin: 0;
+    padding: 8px 12px;
+    background-color: #666C71;
+    font-size: 30px;
+    text-decoration: none;
+    text-align:center;
+    float: left;
+}
