@@ -15,7 +15,7 @@ app.secret_key = 'your secret key'
 # Enter your database connection details below
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'sqlroot!'
+app.config['MYSQL_PASSWORD'] = 'root'
 app.config['MYSQL_DB'] = 'milestone2'
 UPLOAD_FOLDER ='static/product-images/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -194,9 +194,16 @@ def addItem():
             
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('SELECT * FROM Brands WHERE BrandName = %s', (brand,))
-            brand = cursor.fetchone()
-            if brand is None:
+            thisbrand = cursor.fetchone()
+            if thisbrand is None:
                 cursor.execute('INSERT INTO Brands (BrandName) VALUES (%s)', (brand,))
+                mysql.connection.commit()
+
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT * FROM DiscTypes WHERE TypeName = %s', (discType,))
+            type = cursor.fetchone()
+            if type is None:
+                cursor.execute('INSERT INTO DiscTypes (TypeName) VALUES (%s)', (discType,))
                 mysql.connection.commit()
 
     elif request.method == 'POST':
@@ -341,6 +348,8 @@ def get_type(ID):
 @app.route('/products/search', methods=['GET', 'POST'])
 def search():
 
+    msg = None
+
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute('SELECT * FROM Brands')
     all_brands = cursor.fetchall()
@@ -358,7 +367,10 @@ def search():
         cursor.execute('SELECT * FROM Item WHERE Brand LIKE %s OR DiscType LIKE %s OR Name LIKE %s', (search, search, search))
         data = cursor.fetchall()
 
-        return render_template('products.html', items=data, brands=all_brands, disc_types=all_types)
+        if data == ():
+            msg = 'sorry, no matches'
+
+        return render_template('products.html', msg =msg, items=data, brands=all_brands, disc_types=all_types)
     else:
         return redirect(url_for('products'))
 
