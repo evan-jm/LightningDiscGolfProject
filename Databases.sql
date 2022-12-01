@@ -72,9 +72,11 @@ constraint DiscTypes_PK primary key(Type_ID)
 );
 
 insert into Brands values
-(1, 'Discmania'),
-(2, 'Innova'),
-(3, 'Infinite');
+(1, 'Dynamic Discs');
+
+insert into DiscTypes values
+(1, 'Fairway Driver');
+
 
 insert into Item values 
 (1,'Felon1.JPG','Dynamic Discs','Fuzion','Fairway Driver', 'Item Description','2022-11-10','DDDistFusion',20.00),
