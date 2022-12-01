@@ -4,6 +4,7 @@ import MySQLdb.cursors
 from decimal import *
 from werkzeug.utils import secure_filename
 import os
+import datetime
 import re
 
 app = Flask(__name__)
@@ -14,7 +15,7 @@ app.secret_key = 'your secret key'
 # Enter your database connection details below
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'sqlroot!'
 app.config['MYSQL_DB'] = 'milestone2'
 UPLOAD_FOLDER ='static/product-images/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -190,21 +191,12 @@ def addItem():
             cursor.execute('INSERT INTO Item (image, brand, name, disctype, description, release_date, itemcode, cost) VALUES ( %s, %s, %s, %s, %s, %s, %s, %s)', (saveName, brand, name, discType, descrip, release_date, itemCode, cost,))
             mysql.connection.commit()
             msg = 'Item successfully added'
-
-
             
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('SELECT * FROM Brands WHERE BrandName = %s', (brand,))
-            thisbrand = cursor.fetchone()
-            if thisbrand is None:
+            brand = cursor.fetchone()
+            if brand is None:
                 cursor.execute('INSERT INTO Brands (BrandName) VALUES (%s)', (brand,))
-                mysql.connection.commit()
-
-            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('SELECT * FROM DiscTypes WHERE TypeName = %s', (discType,))
-            type = cursor.fetchone()
-            if type is None:
-                cursor.execute('INSERT INTO DiscTypes (TypeName) VALUES (%s)', (discType,))
                 mysql.connection.commit()
 
     elif request.method == 'POST':
@@ -229,7 +221,7 @@ def updateItem(id):
         type = valueCheck(request.form['discType'], item['DiscType'])
         descrip = valueCheck(request.form['descrip'], item['Description'])
         cost = valueCheck(request.form['cost'], item['Cost'])
-        itemCode = "None"
+        itemCode = valueCheck(request.form['code'],item['ItemCode'])
         try:
             image= request.files['image'] if 'image' in request.files else None
             imageName = secure_filename(image.filename)
@@ -413,7 +405,10 @@ def add_product_to_cart():
         _quantity = int(request.form['quantity'])
         _code = request.form['code']
         # validate the received values
-        if _quantity and _code and request.method == 'POST':
+        if request.method=='POST':
+            _quantity = int(request.form['quantity'])
+            _code = request.form['code']
+            # validate the received values
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute("SELECT * FROM Item WHERE ItemCode=%s", (_code,))
             row = cursor.fetchone()
@@ -426,7 +421,7 @@ def add_product_to_cart():
             all_total_quantity = 0
 
             session.modified = True
-            if 'cart_item' in session:
+            if 'cart_item' in session and session['cart_item'] != "":
                 if row['ItemCode'] in session['cart_item']:
                     for key, value in session['cart_item'].items():
                         if row['ItemCode'] == key:
@@ -454,16 +449,19 @@ def add_product_to_cart():
         else:
             return 'Error while adding item to cart'
     except Exception as e:
-        print(e)
+      print("error adding!\n",e)
     finally:
-        cursor.close()
+        try:
+            cursor.close()
+        except Exception as e:
+            print("error closing!\n",e)
 
 
 #Method to empty the cart
 @app.route('/empty')
 def empty_cart():
     try:
-        session.clear()
+        session['cart_item']=""
         return redirect(url_for('.showCart'))
     except Exception as e:
         print(e)
@@ -489,7 +487,7 @@ def delete_product(code):
                 break
 
         if all_total_quantity == 0:
-            session.clear()
+            session['cart_item']=""
         else:
             session['all_total_quantity'] = all_total_quantity
             session['all_total_price'] = all_total_price
@@ -518,6 +516,34 @@ def single_item_page(id):
     return render_template('singleProd.html',item=item)
 
 
+#Method to checkout & create order from the cart
+@app.route('/cart')
+def checkout():
+    try:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM Orders ORDER BY Order_ID DESC LIMIT 1')
+        lastOrder= cursor.fetchone()
+        if(lastOrder):
+            currOrder= lastOrder['Order_ID']+1
+        else:
+            currOrder=1
+        if 'loggedin' in session:
+            cursor.execute('INSERT INTO Orders(order_id,order_date,user_id) VALUES (%s,%s, %s)', (currOrder,datetime.datetime.now(),session['ID']))
+        else:
+            cursor.execute('INSERT INTO Orders(order_id,order_date,user_id) VALUES (%s,%s, %s)', (currOrder,datetime.datetime.now(),None))
+        mysql.connection.commit()
+        for item in session['cart_item'].items():
+            quantity= session['cart_item'][item[0]]['quantity']
+            cursor.execute('SELECT * FROM Item WHERE ItemCode=%s',(session['cart_item'][item[0]]['ItemCode'],))
+            itemID=cursor.fetchone()
+            cursor.execute('INSERT INTO Order_Line_Item(order_id,itemid,product_quantity) VALUES (%s,%s,%s)',(currOrder,int(itemID['ItemID']),quantity))
+            mysql.connection.commit()
+        session['cart_item']=""
+        print("Items added to new order!\n")
+        return redirect(url_for('showCart'))
+    except Exception as e:
+        print("Error Creating Order!\n",e)
+    return redirect(url_for('showCart'))
 
 if __name__ == '__main__':
     app.run()

@@ -61,9 +61,7 @@
       </li>
 
         <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown3" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Cost
-            </a>
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown3" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Cost</a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown3">
                 <a class="dropdown-item" href="{{url_for('hightolow')}}">High to Low</a>
                 <a class="dropdown-item" href="{{url_for('lowtohigh')}}">Low to High</a>
@@ -110,10 +108,8 @@
                         </ul>
                         <h4 class="price">$ {{ b.Cost }}</h4>
                     </div>
-                     <div class="add-to-cart">
-                        <input type="hidden" name="code" value="{{ b.ItemCode }}"/>
-                        <input type="number" class="product-quantity" name="quantity" value="1" size="2" />
-                        <input type="submit" value="Add to Cart" class="default-btn" />
+                    <div class="view-item">
+                        <a class="btn btn-primary" href="{{url_for('single_item_page',id=b.ItemID)}}" role="button">View Item</a>
                     </div>
                  </div>
                </form>
@@ -142,10 +138,8 @@
                         </ul>
                         <h4 class="price">$ {{ t.Cost }}</h4>
                     </div>
-                     <div class="add-to-cart">
-                        <input type="hidden" name="code" value="{{ t.ItemCode }}"/>
-                        <input type="number" class="product-quantity" name="quantity" value="1" size="2" />
-                        <input type="submit" value="Add to Cart" class="default-btn" />
+                    <div class="view-item">
+                        <a class="btn btn-primary" href="{{url_for('single_item_page',id=t.ItemID)}}" role="button">View Item</a>
                     </div>
                  </div>
                </form>
@@ -176,7 +170,7 @@
                         </ul>
                         <h4 class="price">$ {{ item.Cost }}</h4>
                     </div>
-                     <div class="add-to-cart">
+                     <div class="view-item">
                         <a class="btn btn-primary" href="{{url_for('single_item_page',id=item.ItemID)}}" role="button">View Item</a>
                     </div>
                  </div>
@@ -302,7 +296,7 @@
                 padding-left: 5px;
                 font-weight: 300;
             }
-            .single-publication .add-to-cart {
+            .single-publication .view-item {
                 position: absolute;
                 right: 0;
                 bottom: 0;
@@ -318,13 +312,13 @@
                 -webkit-transition: .4s;
                 transition: .4s;
             }
-            .single-publication:hover .add-to-cart {
+            .single-publication:hover .view-item {
                 visibility: visible;
                 transform: scale(1);
                 -webkit-transform: scale(1);
                 opacity: 1;
             }
-            .single-publication .add-to-cart .default-btn {
+            .single-publication .view-item .default-btn {
                 margin-top: 28px;
                 padding: 8px 25px;
                 font-size: 14px;
@@ -332,7 +326,7 @@
             .single-publication .category {
                 margin: 0;
             }
-            .single-publication .add-to-cart .default-btn {
+            .single-publication .view-item .default-btn {
                 margin-top: 28px;
                 padding: 8px 25px;
                 font-size: 14px;
