@@ -377,6 +377,7 @@ def search():
 
 @app.route('/products/costbottomup', methods=['GET', 'POST'])
 def hightolow():
+
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute('SELECT * FROM Brands')
     all_brands = cursor.fetchall()
@@ -387,9 +388,9 @@ def hightolow():
 
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute('SELECT * FROM Item ORDER BY CAST(Cost AS DECIMAL(10, 2)) DESC')
-    lowtohigh = cursor.fetchall()
+    hightolow = cursor.fetchall()
 
-    return render_template('products.html', items=lowtohigh, brands=all_brands, disc_types=all_types)
+    return render_template('products.html', items=hightolow, brands=all_brands, disc_types=all_types)
 
 
 @app.route('/products/costtopdown', methods=['GET', 'POST'])
@@ -523,7 +524,7 @@ def array_merge( first_array , second_array ):
 @app.route('/products/<string:id>')
 def single_item_page(id):
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute('SELECT * FROM Item WHERE ItemID= %s',id)
+    cursor.execute('SELECT * FROM Item WHERE ItemID= %s',(id,))
     item= cursor.fetchone()
     return render_template('singleProd.html',item=item)
 
