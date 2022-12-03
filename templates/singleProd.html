@@ -27,10 +27,10 @@
             <p><b>Description</b></p>
             <p>{{item.Description}}</p>
             <hr>
-            <form action="/add" method="post">
-                <input type="hidden" name="code" value="{{item.ItemCode}}" >
+            <form action="{{ url_for('add_product_to_cart') }}" method="post">
+                <input type="hidden" name="code" id="code" value="{{item.ItemCode}}" >
                 <label>Quantity:</label>
-                <input type="number" name="quantity" id="" value="1" min="1">
+                <input type="number" name="quantity" id="quantity" value="1" min="1">
                 <button type="submit" class="btn btn-sm btn-warning">Add To Cart</button>
             </form>
         </div>

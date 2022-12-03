@@ -9,8 +9,15 @@
     <body>
             <nav class="topnav">
             <div>
-                <a href="{{ url_for('Home') }}"></i>Home</a>
-                <a href="{{ url_for('logout') }}"></i>Logout</a>
+                <a href="{{ url_for('Home') }}">Home</a>
+                {% if 'loggedin' in session%}
+                <a href="{{ url_for('logout') }}">Logout</a>
+                <a href="{{url_for('userHome')}}">Profile</a>
+                {% else %}
+                <a href="{{ url_for('userLogin') }}">Login/Register</a>
+                {% endif %}
+                <a href="{{ url_for('products') }}">All Products</a>
+                <a href="{{ url_for('showCart') }}">View Cart</a>
                 <a href="#about">About</a>
             </div>
             </nav>

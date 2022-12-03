@@ -4,6 +4,7 @@ import MySQLdb.cursors
 from decimal import *
 from werkzeug.utils import secure_filename
 import os
+import datetime
 import re
 
 app = Flask(__name__)
@@ -190,8 +191,6 @@ def addItem():
             cursor.execute('INSERT INTO Item (image, brand, name, disctype, description, release_date, itemcode, cost) VALUES ( %s, %s, %s, %s, %s, %s, %s, %s)', (saveName, brand, name, discType, descrip, release_date, itemCode, cost,))
             mysql.connection.commit()
             msg = 'Item successfully added'
-
-
             
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('SELECT * FROM Brands WHERE BrandName = %s', (brand,))
@@ -229,7 +228,7 @@ def updateItem(id):
         type = valueCheck(request.form['discType'], item['DiscType'])
         descrip = valueCheck(request.form['descrip'], item['Description'])
         cost = valueCheck(request.form['cost'], item['Cost'])
-        itemCode = "None"
+        itemCode = valueCheck(request.form['code'],item['ItemCode'])
         try:
             image= request.files['image'] if 'image' in request.files else None
             imageName = secure_filename(image.filename)
@@ -269,9 +268,14 @@ def inventory():
     return render_template('inventory.html', output_data=data)
 
 
-@app.route('/cart.html', methods=['GET', 'POST'])
-def showCart():
-    return render_template('cart.html')
+@app.route('/orders.html', methods=['GET', 'POST'])
+def viewOrdersUser():
+    id=str(session['ID'])
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT * FROM Orders WHERE User_ID=%s',id)
+    data = cursor.fetchall()
+    return render_template('orders.html', output_data=data)    
+
 
 #Will be moved, method for viewing products
 @app.route('/products.html',methods=['GET', 'POST'])
@@ -349,6 +353,8 @@ def get_type(ID):
 @app.route('/products/search', methods=['GET', 'POST'])
 def search():
 
+    msg = None
+
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute('SELECT * FROM Brands')
     all_brands = cursor.fetchall()
@@ -366,13 +372,17 @@ def search():
         cursor.execute('SELECT * FROM Item WHERE Brand LIKE %s OR DiscType LIKE %s OR Name LIKE %s', (search, search, search))
         data = cursor.fetchall()
 
-        return render_template('products.html', items=data, brands=all_brands, disc_types=all_types)
+        if data == ():
+            msg = 'sorry, no matches'
+
+        return render_template('products.html', msg =msg, items=data, brands=all_brands, disc_types=all_types)
     else:
         return redirect(url_for('products'))
 
 
 @app.route('/products/costbottomup', methods=['GET', 'POST'])
 def hightolow():
+
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute('SELECT * FROM Brands')
     all_brands = cursor.fetchall()
@@ -383,9 +393,9 @@ def hightolow():
 
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute('SELECT * FROM Item ORDER BY CAST(Cost AS DECIMAL(10, 2)) DESC')
-    lowtohigh = cursor.fetchall()
+    hightolow = cursor.fetchall()
 
-    return render_template('products.html', items=lowtohigh, brands=all_brands, disc_types=all_types)
+    return render_template('products.html', items=hightolow, brands=all_brands, disc_types=all_types)
 
 
 @app.route('/products/costtopdown', methods=['GET', 'POST'])
@@ -405,6 +415,20 @@ def lowtohigh():
     return render_template('products.html', items=lowtohigh, brands=all_brands, disc_types=all_types)
 
 
+@app.route('/cart.html', methods=['GET', 'POST'])
+def showCart():
+    return render_template('cart.html')
+
+
+@app.route('/cart.html', methods=['GET', 'POST'])
+def checkShipping():
+    if 'shipmentType' in request.form and request.method=='GET':
+        cost= int(request.form['shipmentType'])
+        session['all_total_price'] += cost
+        session['shipmentType']= cost
+    return redirect(url_for('.showCart'))
+
+
 #Method for adding project to cart, uses array for each thing
 @app.route('/add', methods=['POST'])
 def add_product_to_cart():
@@ -413,9 +437,12 @@ def add_product_to_cart():
         _quantity = int(request.form['quantity'])
         _code = request.form['code']
         # validate the received values
-        if _quantity and _code and request.method == 'POST':
+        if request.method=='POST':
+            _quantity = int(request.form['quantity'])
+            _code = request.form['code']
+            # validate the received values
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute("SELECT * FROM Item WHERE ItemCode=%s", (_code,))
+            cursor.execute('SELECT * FROM Item WHERE ItemCode=%s', (_code,))
             row = cursor.fetchone()
 
             costStr=row['Cost']
@@ -426,7 +453,7 @@ def add_product_to_cart():
             all_total_quantity = 0
 
             session.modified = True
-            if 'cart_item' in session:
+            if 'cart_item' in session and session['cart_item'] != "":
                 if row['ItemCode'] in session['cart_item']:
                     for key, value in session['cart_item'].items():
                         if row['ItemCode'] == key:
@@ -449,21 +476,23 @@ def add_product_to_cart():
 
             session['all_total_quantity'] = all_total_quantity
             session['all_total_price'] = all_total_price
-
             return redirect(url_for('products'))
         else:
             return 'Error while adding item to cart'
     except Exception as e:
-        print(e)
+      print("error adding!\n",e)
     finally:
-        cursor.close()
+        try:
+            cursor.close()
+        except Exception as e:
+            print("error closing!\n",e)
 
 
 #Method to empty the cart
 @app.route('/empty')
 def empty_cart():
     try:
-        session.clear()
+        session['cart_item']=""
         return redirect(url_for('.showCart'))
     except Exception as e:
         print(e)
@@ -489,7 +518,7 @@ def delete_product(code):
                 break
 
         if all_total_quantity == 0:
-            session.clear()
+            session['cart_item']=""
         else:
             session['all_total_quantity'] = all_total_quantity
             session['all_total_price'] = all_total_price
@@ -513,10 +542,74 @@ def array_merge( first_array , second_array ):
 @app.route('/products/<string:id>')
 def single_item_page(id):
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute('SELECT * FROM Item WHERE ItemID= %s',id)
+    cursor.execute('SELECT * FROM Item WHERE ItemID= %s',(id,))
     item= cursor.fetchone()
     return render_template('singleProd.html',item=item)
 
+
+#Method to show checkout page
+@app.route('/cart')
+def checkoutPage():
+    user=None
+    try:
+        if 'loggedin' in session:
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT * FROM User WHERE username=%s', (session['username'],))
+            user= cursor.fetchone()
+    except Exception as e:
+        print("Error finding user",e)
+        user=None
+    return render_template('checkout.html',user=user,total=session['all_total_price'])
+
+
+#Method to update totals from shipping
+@app.route('/checkout/<string:val>')
+def shipType(val):
+    total=Decimal(session['all_total_price'])
+    addCost= int(val)
+    newTotal=total+addCost
+    user=None
+    try:
+        if 'loggedin' in session:
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT * FROM User WHERE username=%s', (session['username'],))
+            user= cursor.fetchone()
+    except Exception as e:
+        print("Error finding user",e)
+        user=None
+    return render_template('checkout.html',user=user,total=newTotal)
+    
+
+
+
+#Method to checkout & create order from the cart
+@app.route('/checkout',methods=['GET','POST'])
+def checkout():
+    try:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM Orders ORDER BY Order_ID DESC LIMIT 1')
+        lastOrder= cursor.fetchone()
+        if(lastOrder):
+            currOrder= lastOrder['Order_ID']+1
+        else:
+            currOrder=1
+        if 'loggedin' in session:
+            cursor.execute('INSERT INTO Orders(order_id,order_date,user_id) VALUES (%s,%s, %s)', (currOrder,datetime.datetime.now(),session['ID']))
+        else:
+            cursor.execute('INSERT INTO Orders(order_id,order_date,user_id) VALUES (%s,%s, %s)', (currOrder,datetime.datetime.now(),None))
+        mysql.connection.commit()
+        for item in session['cart_item'].items():
+            quantity= session['cart_item'][item[0]]['quantity']
+            cursor.execute('SELECT * FROM Item WHERE ItemCode=%s',(session['cart_item'][item[0]]['ItemCode'],))
+            itemID=cursor.fetchone()
+            cursor.execute('INSERT INTO Order_Line_Item(order_id,itemid,product_quantity) VALUES (%s,%s,%s)',(currOrder,int(itemID['ItemID']),quantity))
+            mysql.connection.commit()
+        session['cart_item']=""
+        print("Items added to new order!\n")
+        return redirect(url_for('showCart'))
+    except Exception as e:
+        print("Error Creating Order!\n",e)
+    return redirect(url_for('showCart'))
 
 
 if __name__ == '__main__':

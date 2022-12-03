@@ -91,6 +91,20 @@
       </div>
       <br>
 
+
+      <div class="row">
+        <h2><label for="oldcode"> Current Code: </label></h2>
+       <div class="col-sm-10">
+       <input type="text" readonly class="form-control-plaintext" id="oldcode" value="{{item.ItemCode}}">
+       </div>
+    </div>
+    <div class="form-group">
+      <label for="code">Item Code</label>
+      <input type="text" class="form-control" name="code" id="code" placeholder="Input new item code, leave blank if no change">
+    </div>
+    <br>
+
+
       <div class="form-group">
         <label>Current Item Image</label>
          <img src="/static/product-images/{{ item.Image }}" width="120" height="120">
