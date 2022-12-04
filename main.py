@@ -277,6 +277,16 @@ def viewOrdersUser():
     return render_template('orders.html', output_data=data)    
 
 
+@app.route('/orders.html/<string:id>', methods=['GET', 'POST'])
+def cancelOrder(id):
+   cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+   cursor.execute('DELETE FROM Order_Line_Item WHERE Order_ID = %s', (id,))
+   mysql.connection.commit()
+   cursor.execute('DELETE FROM Orders WHERE Order_ID = %s', (id,))
+   mysql.connection.commit()
+   return redirect(url_for('viewOrdersUser'))  
+
+
 #Will be moved, method for viewing products
 @app.route('/products.html',methods=['GET', 'POST'])
 def products():
