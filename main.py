@@ -621,14 +621,14 @@ def checkout():
 
         #Check if user logged into account, then just create order off their info    
         if 'loggedin' in session:
-            cursor.execute('INSERT INTO Orders(order_id,order_date,customer_id,address,order_total,total_quantity) VALUES (%s,%s,%s,%s,%s,%s)', (currOrder,datetime.datetime.now(),session['ID'],ship,total,quantityT,))
+            cursor.execute('INSERT INTO Orders(order_id,order_date,user_id,guest_id,address,order_total,total_quantity) VALUES (%s,%s,%s,%s,%s,%s,%s)', (currOrder,datetime.datetime.now(),session['ID'],None,ship,total,quantityT,))
             mysql.connection.commit()
         #Else create guest, then create order based off of their info 
         else:
             time= datetime.datetime.now()
             cursor.execute('INSERT INTO Guest(id,first_name,last_name,email,use_time) VALUES (%s,%s,%s,%s,%s)', (currGuest,fname,lname,email,time,))
             mysql.connection.commit()
-            cursor.execute('INSERT INTO Orders(order_id,order_date,customer_id,address,order_total,total_quantity) VALUES (%s,%s,%s,%s,%s,%s)', (currOrder,datetime.datetime.now(),currGuest,ship,total,quantityT,))
+            cursor.execute('INSERT INTO Orders(order_id,order_date,user_id,guest_id,address,order_total,total_quantity) VALUES (%s,%s,%s,%s,%s,%s,%s)', (currOrder,datetime.datetime.now(),None,currGuest,ship,total,quantityT,))
             mysql.connection.commit()
         #Commit for both of the Orders inserts
         #Next add each item in cart into order_line_item

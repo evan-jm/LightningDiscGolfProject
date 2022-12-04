@@ -1,6 +1,6 @@
     create table User
     (
-    ID int auto_increment not null,
+    ID int auto_increment,
     username varchar(20) not null default '',
     first_name varchar(10),
     last_name varchar(20),
@@ -15,7 +15,7 @@
 
     create table Guest
     (
-	ID int auto_increment not null,
+	ID int auto_increment,
     first_name varchar(10),
     last_name varchar(20),
     email varchar(20) not null,
@@ -55,11 +55,14 @@ create table Orders
 (
 Order_ID int not null auto_increment,
 Order_Date date not null,
-Customer_ID int,
+User_ID int,
+Guest_ID int,
 Address varchar(30),
 Order_Total decimal not null,
 Total_Quantity int not null,
-constraint Orders_PK primary key(Order_ID)
+constraint Orders_PK primary key(Order_ID),
+constraint Orders_FK1 foreign key(User_ID) references User(ID),
+constraint Orders_FK2 foreign key(Guest_ID) references Guest(ID)
 );
 
 
