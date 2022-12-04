@@ -13,8 +13,85 @@
 {% block content %}
 
 <h2 class="h2">Hello, {{username}}!</h2>
-<p>Welcome to your Admin Page!</p>
-<a href="{{ url_for('addItem') }}"><button type="button">Add Item</button></a>
-<a href="{{ url_for('inventory') }}"><button type="button">Check Inventory</button></a>
+<p style ="color:#3FA2F5; text-align: center;">Welcome to your Admin Page!</p>
+<!--<a href="{{ url_for('addItem') }}"><button type="button">Add Item</button></a>-->
+<!--<a href="{{ url_for('inventory') }}"><button type="button">Check Inventory</button></a>-->
+
+
+ <div class="box">
+  <ul>
+      <li><a href="{{ url_for('addItem') }}" style="color:black; font-size: 20px"><span> </span> Add Item </a></li>
+      <li><a href="{{ url_for('inventory') }}" style="color:black; font-size: 20px"><span> </span> Inventory </a></li>
+  </ul>
+ </div>
+
+<style>
+
+.box {
+width: 750px;
+width: 100%;
+border-top-left-radius: 10px;
+border-top-right-radius: 10px;
+}
+
+.box h2 {
+color: #fff;
+background: black;
+padding: 10px 20px;
+font-size: 20px;
+font-weight: 700
+border-top-left-radius: 10px;
+border-top-right-radius: 10px;
+}
+
+.box ul{
+position: relative;
+background: #fff;
+}
+
+.box ul li{
+list-style: none;
+padding: 10px;
+width: 100%;
+background: #fff;
+box-shadow: 0 5px 25px rgba(0, 0, 0, .1);
+transition: transform 0.5s;
+}
+
+.box ul:hover li {
+opacity: 0.2;
+}
+
+.box ul li:hover{
+transform: scale(1.015);
+z-index: 100;
+background: #3FA2F5;
+/*box-shadow: 0 5px 25px rgba(0, 0, 0, 1.2);*/
+color:#fff
+}
+
+.box ul li span{
+width: 20px;
+height: 20px;
+text-align: center;
+line-height: 20px;
+background: #25bcff;
+color: #fff;
+display: inline-block;
+border-radius: 50%;
+margin-right: 10px;
+font-size: 12px;
+font-weight: 600;
+transform: translateY(-2px);
+}
+
+.box ul li:hover span {
+background: #fff;
+color: #25bcff;
+}
+</style>
+
+
 {% endblock %}
+
 </html>

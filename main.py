@@ -380,7 +380,7 @@ def search():
         return redirect(url_for('products'))
 
 
-@app.route('/products/costbottomup', methods=['GET', 'POST'])
+@app.route('/products/hightolow', methods=['GET', 'POST'])
 def hightolow():
 
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -398,7 +398,7 @@ def hightolow():
     return render_template('products.html', items=hightolow, brands=all_brands, disc_types=all_types)
 
 
-@app.route('/products/costtopdown', methods=['GET', 'POST'])
+@app.route('/products/lowtohigh', methods=['GET', 'POST'])
 def lowtohigh():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute('SELECT * FROM Brands')
