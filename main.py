@@ -15,7 +15,7 @@ app.secret_key = 'your secret key'
 # Enter your database connection details below
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'sqlroot!'
 app.config['MYSQL_DB'] = 'milestone2'
 UPLOAD_FOLDER ='static/product-images/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -272,7 +272,7 @@ def inventory():
 def viewOrdersUser():
     id=str(session['ID'])
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute('SELECT * FROM Orders WHERE User_ID=%s',id)
+    cursor.execute('SELECT * FROM Orders WHERE Customer_ID=%s',(id,))
     data = cursor.fetchall()
     return render_template('orders.html', output_data=data)    
 
@@ -417,16 +417,7 @@ def lowtohigh():
 
 @app.route('/cart.html', methods=['GET', 'POST'])
 def showCart():
-    return render_template('cart.html')
-
-
-@app.route('/cart.html', methods=['GET', 'POST'])
-def checkShipping():
-    if 'shipmentType' in request.form and request.method=='GET':
-        cost= int(request.form['shipmentType'])
-        session['all_total_price'] += cost
-        session['shipmentType']= cost
-    return redirect(url_for('.showCart'))
+    return render_template('cart.html',msg='')
 
 
 #Method for adding project to cart, uses array for each thing
@@ -548,44 +539,42 @@ def single_item_page(id):
 
 
 #Method to show checkout page
-@app.route('/cart')
+@app.route('/cart', methods=['GET','POST'])
 def checkoutPage():
-    user=None
-    try:
+    if 'shipMethod' in request.form and request.method=='POST':
+        if request.form['shipMethod']== "Bubble Mailer":
+            total=Decimal(session['all_total_price'])+2
+            shipCost="$2.00"
+        elif request.form['shipMethod'] == "Collector's Bag":
+            total=Decimal(session['all_total_price'])+4
+            shipCost="$4.00"
+        else:
+            total=total=Decimal(session['all_total_price'])+6
+            shipCost="$6.00"
+
         if 'loggedin' in session:
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('SELECT * FROM User WHERE username=%s', (session['username'],))
             user= cursor.fetchone()
-    except Exception as e:
-        print("Error finding user",e)
-        user=None
-    return render_template('checkout.html',user=user,total=session['all_total_price'])
-
-
-#Method to update totals from shipping
-@app.route('/checkout/<string:val>')
-def shipType(val):
-    total=Decimal(session['all_total_price'])
-    addCost= int(val)
-    newTotal=total+addCost
-    user=None
-    try:
-        if 'loggedin' in session:
-            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('SELECT * FROM User WHERE username=%s', (session['username'],))
-            user= cursor.fetchone()
-    except Exception as e:
-        print("Error finding user",e)
-        user=None
-    return render_template('checkout.html',user=user,total=newTotal)
+        else:
+            user=None
+        return render_template('checkout.html',user=user,total=total,ship=request.form['shipMethod'],shipCost=shipCost)
+    else:
+        return render_template('cart.html',msg='Please select a shipping method!')
     
-
-
 
 #Method to checkout & create order from the cart
 @app.route('/checkout',methods=['GET','POST'])
 def checkout():
-    try:
+    if request.method=='POST' and 'email' in request.form and 'lastname' in request.form and 'firstname' in request.form and 'address' in request.form:
+        total=Decimal(request.form['newTotalPrice'])
+        quantityT= session['all_total_quantity']
+        email = request.form['email']
+        fname = request.form['firstname']
+        lname = request.form['lastname']
+        ship= request.form['address']
+        
+        #Checks id of last order, increments it for new order
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM Orders ORDER BY Order_ID DESC LIMIT 1')
         lastOrder= cursor.fetchone()
@@ -593,23 +582,39 @@ def checkout():
             currOrder= lastOrder['Order_ID']+1
         else:
             currOrder=1
-        if 'loggedin' in session:
-            cursor.execute('INSERT INTO Orders(order_id,order_date,user_id) VALUES (%s,%s, %s)', (currOrder,datetime.datetime.now(),session['ID']))
+
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM Guest ORDER BY ID DESC LIMIT 1')
+        lastGuest= cursor.fetchone()
+        if(lastGuest):
+            currGuest= lastGuest['ID']+1
         else:
-            cursor.execute('INSERT INTO Orders(order_id,order_date,user_id) VALUES (%s,%s, %s)', (currOrder,datetime.datetime.now(),None))
-        mysql.connection.commit()
+            currGuest=20001    
+
+        #Check if user logged into account, then just create order off their info    
+        if 'loggedin' in session:
+            cursor.execute('INSERT INTO Orders(order_id,order_date,customer_id,address,order_total,total_quantity) VALUES (%s,%s,%s,%s,%s,%s)', (currOrder,datetime.datetime.now(),session['ID'],ship,total,quantityT,))
+            mysql.connection.commit()
+        #Else create guest, then create order based off of their info 
+        else:
+            time= datetime.datetime.now()
+            cursor.execute('INSERT INTO Guest(id,first_name,last_name,email,use_time) VALUES (%s,%s,%s,%s,%s)', (currGuest,fname,lname,email,time,))
+            mysql.connection.commit()
+            cursor.execute('INSERT INTO Orders(order_id,order_date,customer_id,address,order_total,total_quantity) VALUES (%s,%s,%s,%s,%s,%s)', (currOrder,datetime.datetime.now(),currGuest,ship,total,quantityT,))
+            mysql.connection.commit()
+        #Commit for both of the Orders inserts
+        #Next add each item in cart into order_line_item
         for item in session['cart_item'].items():
             quantity= session['cart_item'][item[0]]['quantity']
+            itemTotal= Decimal(session['cart_item'][item[0]]['total_price'])
             cursor.execute('SELECT * FROM Item WHERE ItemCode=%s',(session['cart_item'][item[0]]['ItemCode'],))
             itemID=cursor.fetchone()
-            cursor.execute('INSERT INTO Order_Line_Item(order_id,itemid,product_quantity) VALUES (%s,%s,%s)',(currOrder,int(itemID['ItemID']),quantity))
+            cursor.execute('INSERT INTO Order_Line_Item(order_id,itemid,product_quantity,cost_total) VALUES (%s,%s,%s,%s)',(currOrder,int(itemID['ItemID']),quantity,itemTotal,))
             mysql.connection.commit()
         session['cart_item']=""
-        print("Items added to new order!\n")
         return redirect(url_for('showCart'))
-    except Exception as e:
-        print("Error Creating Order!\n",e)
-    return redirect(url_for('showCart'))
+    else:
+        return render_template('checkout.html',msg='Please enter 1 or more missing fields!')
 
 
 if __name__ == '__main__':

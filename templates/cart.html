@@ -66,7 +66,17 @@
                  <tr>
                     <td colspan="4">
                     <p><a id="btnContinue" href="{{ url_for('.products') }}" class="btn btn-danger">Continue Shopping</a></p>
-                    <p><a id="btnCheckoutPage" href="{{ url_for('.checkoutPage') }}" class="btn btn-success">Ready To Checkout?</a></p>
+                    <br>
+                    <p>{{msg}}</p>
+                    <form action="{{ url_for('checkoutPage') }}" method="post" enctype="multipart/form-data" autocomplete="off">
+                        <p>
+                            <input type="radio" name="shipMethod" id="bubble" value="Bubble Mailer"> Bubble Packagw - $2 <br>
+                            <input type="radio" name="shipMethod" id="collect" value="Collector's Bag"> Collector's Bag - $4 <br>
+                            <input type="radio" name="shipMethod" id="backpack" value="Backpack"> Backpack - $6 <br>
+                        </p>
+                        <p style="padding:8px;"><button type="button" class="btn btn-success"><input type="submit" value="Ready To Checkout?"></button></p>
+                    </form>
+                    
                  </tr>
             {% else: %}
                 <div class="no-records">Your Cart Is Empty</div>
