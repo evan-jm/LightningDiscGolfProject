@@ -26,7 +26,7 @@
                 <th>{{row.Order_ID}}</th>
                 <td>{{ row.Order_Date }}</td>
                 <td>{{ row.Order_Total}}</td>
-                <td>{{row.Total_Quantity</td>
+                <td>{{row.Total_Quantity}}</td>
                <td><a href="{{ url_for('cancelOrder',id=row.Order_ID)}}"><button type="button">Cancel Order</button></a></td>
             </tr>
         {% endfor %}
