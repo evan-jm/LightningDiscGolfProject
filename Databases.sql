@@ -34,6 +34,8 @@
     password varchar(20) not null,
      constraint User_PK primary key(ID)
     );
+
+    insert into Admin Values (default,'admin','Matt','Myles','matt@gmail.com','pword');
     
 create table Item
      (

@@ -157,6 +157,24 @@ def adminHome():
         return redirect(url_for('userLogin'))
 
 
+@app.route('/adminOrders.html', methods=['GET', 'POST'])
+def viewOrdersAdmin():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT * FROM Orders')
+    data = cursor.fetchall()
+    return render_template('adminOrders.html', output_data=data)    
+
+
+@app.route('/adminOrders.html/<string:id>', methods=['GET', 'POST'])
+def cancelOrderAdmin(id):
+   cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+   cursor.execute('DELETE FROM Order_Line_Item WHERE Order_ID = %s', (id,))
+   mysql.connection.commit()
+   cursor.execute('DELETE FROM Orders WHERE Order_ID = %s', (id,))
+   mysql.connection.commit()
+   return redirect(url_for('viewOrdersAdmin'))  
+
+
 @app.route('/addItem', methods=['GET', 'POST'])
 def addItem():
     # Output message if something goes wrong...

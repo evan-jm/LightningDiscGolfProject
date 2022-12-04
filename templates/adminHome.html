@@ -4,8 +4,7 @@
 
 <div class="topnav">
     <a href="{{ url_for('Home') }}">Home</a>
-    <a href="{{ url_for('userLogin') }}">Login/Register</a>
-    <a href="{{ url_for('products') }}" class="active">All Products</a>
+    <a href="{{ url_for('products') }}">All Products</a>
     <a href="{{ url_for('showCart') }}">View Cart</a>
     <a href="{{ url_for('userHome') }}">Profile</a>
     <a href="#about">About</a>
@@ -22,6 +21,7 @@
   <ul>
       <li><a href="{{ url_for('addItem') }}" style="color:black; font-size: 20px"><span> </span> Add Item </a></li>
       <li><a href="{{ url_for('inventory') }}" style="color:black; font-size: 20px"><span> </span> Inventory </a></li>
+      <li><a href="{{ url_for('viewOrdersAdmin') }}" style="color:black; font-size: 20px"><span> </span> View Orders </a></li>
   </ul>
  </div>
 
@@ -39,7 +39,7 @@ color: #fff;
 background: black;
 padding: 10px 20px;
 font-size: 20px;
-font-weight: 700
+font-weight: 700;
 border-top-left-radius: 10px;
 border-top-right-radius: 10px;
 }
