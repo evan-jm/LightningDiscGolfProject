@@ -19,19 +19,29 @@
             <th style="width:fit-content">Date Placed</th>
             <th style="width:fit-content">Total Cost</th>
             <th style="width:fit-content">Total Quantity</th>
+            <!-- code for more columns as needed -->
+            <!--<th style="width:fit-content">Disc Type</th>
+            <th style="width:fit-content">Release Date</th>
+            <th style="width:fit-content">Item Code</th>
+            <th style="width:fit-content">Cost</th>
+            <th style="width:fit-content">Update</th>
+            <th style="width:fit-content">Delete</th>-->
         </tr>
     </thead>
     <tbody>
         {% for row in output_data %}
-        <tr>
-            <th>{{row.Order_ID}}</th>
-            <td>{{ row.Order_Date }}</td>
-            <td>{{ row.Order_Total}}</td>
-            <td>{{row.Total_Quantity}}</td>
-           <td><a href="{{ url_for('cancelOrder',id=row.Order_ID)}}"><button type="button">Cancel Order</button></a></td>
-        </tr>
-    {% endfor %}
-</tbody>
+            <tr>
+                <th>{{row.Order_ID}}</th>
+                <td>{{ row.Order_Date }}</td>
+                <td></td>
+                <td></td>
+                <!-- empty above as need to implement code for cost and quantity -->
+                <!-- buttons below can be for "view order" button, basically cart view of order, and "cancel order" button to delete order -->
+               <!--<td><a href="{{ url_for('updateItem',id=row.ItemID)}}"><button type="button">Update</button></a></td>
+                <td><a href="{{ url_for('deleteItem',id=row.ItemID)}}"><button type="button">Delete</button></a></td>-->
+            </tr>
+        {% endfor %}
+    </tbody>
 </table>
 <style>
     table{

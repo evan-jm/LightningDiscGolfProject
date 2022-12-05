@@ -22,7 +22,7 @@
 <body>
 	<div id="container">
 		<nav>
-			<div  id="logo"> <i href="#"><img src="{{ url_for('static', filename='img/My_project-1_6.png') }}" height="90" width="150"></i> </div>
+			<div  id="logo"> <i href="#"><img src="{{ url_for("static", filename="img/My_project-1_6.png") }}" height="90" width="150"></i> </div>
 			<ul>
 				<li><a href="{{ url_for('Home') }}">Home</a></li>
 				{% if 'loggedin' in session%}

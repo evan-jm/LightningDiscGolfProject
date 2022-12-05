@@ -55,17 +55,17 @@ def userLogin():
         print(account, "admin table")
 
         # If account exists in accounts table in out database
-        if account:
+        if account != None:
             # Create session data, we can access this data in other routes
             session['loggedin'] = True
             session['ID'] = account['ID']
             session['username'] = account['username']
             session['user']=account
             # Redirect to home page
-            return render_template('adminHome.html',user=account)
+            return render_template('adminHome.html',user=session['user'])
 
         # If account does not exist in Admin, check to see if credentials exist in User
-        elif not account:
+        elif username != "mattm":
             # Check if account exists using MySQL
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('SELECT * FROM User WHERE username = %s AND password = %s', (username, password,))
@@ -78,7 +78,8 @@ def userLogin():
                 session['loggedin'] = True
                 session['ID'] = account['ID']
                 session['username'] = account['username']
-                return render_template('userHome.html',user=account)
+
+                return render_template('userHome.html',user=session['user'])
 
             else:
                 session["message"] = "Incorrect username/password"
@@ -162,11 +163,9 @@ def userHome():
         cursor.execute('SELECT * FROM Admin WHERE username = %s', (session['username'],))
         account = cursor.fetchone()
         if account:
-            return render_template('adminHome.html', user=account)
+            return render_template('adminHome.html', user=session['user'])
         else:
-            cursor.execute('SELECT * FROM User WHERE username = %s', (session['username'],))
-            account=cursor.fetchone()
-            return render_template('userHome.html', user=account)
+            return render_template('userHome.html', user=session['user'])
     # User is not loggedin redirect to login page
     return redirect(url_for('userLogin'))
 
@@ -199,32 +198,6 @@ def cancelOrderAdmin(id):
    cursor.execute('DELETE FROM Orders WHERE Order_ID = %s', (id,))
    mysql.connection.commit()
    return redirect(url_for('viewOrdersAdmin'))  
-
-
-@app.route('/adminHome/<string:id>', methods=['GET', 'POST'])
-def updateAdmin(id):
-    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute('SELECT * FROM Admin WHERE ID = %s', (id,))
-    account= cursor.fetchone()
-    if request.method == "POST" and account:
-        updateFirstName = request.form['firstname']
-        updateLastName= request.form['lastname']
-        updateEmail = request.form['email']
-        updateUsername = request.form['username']
-        updatePword= request.form['password']
-
-        #Check if username already exists
-        cursor.execute('SELECT * FROM Admin WHERE ID = %s', (id,))
-        checkAccount= cursor.fetchone()
-        if checkAccount and checkAccount['username'] != account['username']:
-            msg='Username Already Exists!'
-            return render_template("adminHome.html", msg=msg,user=account)
-        else:
-            cursor.execute('UPDATE Admin SET username=%s, first_name=%s, last_name=%s, email=%s, password=%s WHERE ID=%s', (updateUsername,updateFirstName,updateLastName,updateEmail,updatePword,id))
-            mysql.connection.commit()
-            cursor.execute('SELECT * FROM Admin WHERE ID = %s', (id,))
-            account= cursor.fetchone()
-            return render_template("adminHome.html", user=account)
 
 
 @app.route('/addItem', methods=['GET', 'POST'])
@@ -326,8 +299,6 @@ def valueCheck(field, itemfield):
 @app.route('/inventory.html/<string:id>', methods=['GET', 'POST'])
 def deleteItem(id):
    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-   cursor.execute('DELETE FROM Order_Line_Item WHERE ItemID = %s', (id,))
-   mysql.connection.commit()
    cursor.execute('DELETE FROM Item WHERE ItemID = %s', (id,))
    mysql.connection.commit()
    return redirect(url_for('inventory'))    
@@ -360,10 +331,13 @@ def cancelOrder(id):
    return redirect(url_for('viewOrdersUser'))  
 
 
-@app.route('/userHome/<string:id>', methods=['GET', 'POST'])
-def updateUser(id):
+@app.route('/userHome/<string:id><string:userType>', methods=['GET', 'POST'])
+def updateUser(id,userType):
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute('SELECT * FROM User WHERE ID = %s', (id,))
+    if userType == "User":
+        cursor.execute('SELECT * FROM User WHERE ID = %s', (id,))
+    else:
+        cursor.execute('SELECT * FROM Admin WHERE ID = %s', (id,))
     account= cursor.fetchone()
     if request.method == "POST" and account:
         updateFirstName = request.form['firstname']
@@ -546,8 +520,7 @@ def add_product_to_cart():
 
             costStr=row['Cost']
             cost= Decimal(costStr)
-            total=_quantity*cost
-            itemArray = {row['ItemCode']: {'Name': row['Name'], 'ItemCode': row['ItemCode'], 'quantity': _quantity, 'Cost': cost, 'Image': row['Image'], 'total_price': str(total)}}
+            itemArray = {row['ItemCode']: {'Name': row['Name'], 'ItemCode': row['ItemCode'], 'quantity': _quantity, 'Cost': cost, 'Image': row['Image'], 'total_price': _quantity * cost}}
 
             all_total_price = 0
             all_total_quantity = 0
@@ -560,7 +533,7 @@ def add_product_to_cart():
                             old_quantity = session['cart_item'][key]['quantity']
                             total_quantity = old_quantity + _quantity
                             session['cart_item'][key]['quantity'] = total_quantity
-                            session['cart_item'][key]['total_price'] = str(total_quantity * cost)
+                            session['cart_item'][key]['total_price'] = total_quantity * cost
                 else:
                     session['cart_item'] = array_merge(session['cart_item'], itemArray)
 
@@ -683,7 +656,7 @@ def checkout():
         lname = request.form['lastname']
         ship= request.form['address']
         
-
+        #Checks id of last order, increments it for new order
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
         #Check if user logged into account, then just create order off their info    
