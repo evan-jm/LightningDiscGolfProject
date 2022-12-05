@@ -62,7 +62,7 @@ def userLogin():
             session['username'] = account['username']
             session['user']=account
             # Redirect to home page
-            return redirect("/adminHome/home/<session['user']>")
+            return render_template('adminHome.html',user=session['user'])
 
         # If account does not exist in Admin, check to see if credentials exist in User
         elif username != "mattm":
@@ -79,7 +79,7 @@ def userLogin():
                 session['ID'] = account['ID']
                 session['username'] = account['username']
 
-                return redirect("/pythonlogin/home/<session['user']")
+                return render_template('userHome.html',user=session['user'])
 
             else:
                 session["message"] = "Incorrect username/password"

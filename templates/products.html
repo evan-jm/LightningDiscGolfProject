@@ -200,14 +200,17 @@
 <body>
 	<div id="container">
 		<nav>
-			<div  id="logo"> <i href="#"><img src="{{ url_for("static", filename="img/My_project-1_6.png") }}" height="90" width="150"></i> </div>
+			<div  id="logo"> <i href="#"><img src="{{ url_for('static', filename='img/My_project-1_6.png') }}" height="90" width="150"></i> </div>
 			<ul>
 				<li><a href="{{ url_for('Home') }}">Home</a></li>
+				{% if 'loggedin' in session%}
+					<li><a href="{{ url_for('userHome',user=session['user']) }}">Profile</a></li>
+					<li><a href="{{ url_for('logout') }}">Logout</a></li>
+				{% else %}
 				<li><a href="{{ url_for('userLogin') }}">Login/Register</a></li>
+				{% endif %}
 				<li><a href="{{ url_for('products') }}">All Products</a></li>
-                <li><a href="{{ url_for('userHome') }}">Profile</a></li>
 				<li><a href="{{ url_for('about') }}">About</a></li>
-				<li><a href="{{ url_for('logout') }}">Logout</a></li>
 				<li><a href="{{ url_for('showCart') }}"><i class="fa fa-shopping-cart" style="font-size:24px"></i></a></li>
 			</ul>
 		</nav>
@@ -286,7 +289,7 @@
                  <div class="single-publication">
                     <figure style="height:100%; width: 100%; width:200px; height:200px">
                         <a href="{{url_for('single_item_page',id=b.ItemID)}}" >
-                            <img src="/static/product-images/{{ b.Image }}" style="height:100%; width: 100%; width:235px;height:200px" alt="{{b.Name}}">
+                            <img src="/static/product-images/{{ b.Image }}" style="height:100%; width: 100%; width:285px;height:200px" alt="{{b.Name}}">
                         </a>
                     </figure>
                      <div class="publication-content">
@@ -316,7 +319,7 @@
                  <div class="single-publication">
                     <figure style="height:100%; width: 100%; width:200px; height:200px">
                         <a href="{{url_for('single_item_page',id=t.ItemID)}}">
-                            <img src="/static/product-images/{{ t.Image }} "  style="height:100%; width: 100%; width:235px; height:200px" alt="{{t.Name}}">
+                            <img src="/static/product-images/{{ t.Image }} "  style="height:100%; width: 100%; width:275px; height:200px" alt="{{t.Name}}">
                         </a>
                     </figure>
                      <div class="publication-content">
@@ -348,7 +351,7 @@
                  <div class="single-publication">
                     <figure style="height:100%; width: 100%; width:200px; height:200px">
                         <a href="{{url_for('single_item_page',id=item.ItemID)}}">
-                            <img src="/static/product-images/{{ item.Image }}" style="height:100%; width: 100%; width:235px;height:200px" alt="{{item.Name}}">
+                            <img src="/static/product-images/{{ item.Image }}" style="height:100%; width: 100%; width:285px;height:200px" alt="{{item.Name}}">
                         </a>
                     </figure>
                      <div class="publication-content">
