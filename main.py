@@ -52,31 +52,45 @@ def userLogin():
         cursor.execute('SELECT * FROM Admin WHERE username = %s AND password = %s', (username, password,))
         # Fetch one record and return result
         account = cursor.fetchone()
+        print(account, "admin table")
+
         # If account exists in accounts table in out database
-        if account:
+        if account != None:
             # Create session data, we can access this data in other routes
             session['loggedin'] = True
             session['ID'] = account['ID']
             session['username'] = account['username']
             session['user']=account
             # Redirect to home page
-            return render_template('adminHome.html', user=account)
+            return redirect("/adminHome/home/<session['user']>")
+
         # If account does not exist in Admin, check to see if credentials exist in User
-        elif not account:
+        elif username != "mattm":
             # Check if account exists using MySQL
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('SELECT * FROM User WHERE username = %s AND password = %s', (username, password,))
             # Fetch one record and return result
             account = cursor.fetchone()
+            print(account, "85")
             # If account exists in accounts table in out database
             if account:
                 # Create session data, we can access this data in other routes
                 session['loggedin'] = True
                 session['ID'] = account['ID']
                 session['username'] = account['username']
-                session['user']=account
-                # Redirect to home page
-                return render_template('userHome.html', user=account)
+
+                return redirect("/pythonlogin/home/<session['user']")
+
+            else:
+                session["message"] = "Incorrect username/password"
+
+                message = ""
+                if session.get("message"):
+                    message = session.get("message")
+                    session.pop("message", None)
+                return render_template('login.html', message=message)
+
+
         else:
             # Account doesnt exist or username/password incorrect
             msg = 'Incorrect username/password!'
@@ -102,9 +116,12 @@ def userRegister():
     # Check if "username", "password" and "email" POST requests exist (user submitted form)
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form:
         # Create variables for easy access
+
         email = request.form['email']
         password = request.form['password']
         username = request.form['username']
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
 
         # Check if account exists using MySQL
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -119,15 +136,21 @@ def userRegister():
             msg = 'Please fill out the form!'
         else:
             # Account doesnt exists and the form data is valID, now insert new account into accounts table
-            cursor.execute('INSERT INTO User (username, email, password) VALUES (%s,%s, %s)', (username, email, password,))
+            cursor.execute('INSERT INTO User (username, email, password,first_name,last_name) VALUES (%s,%s,%s,%s, %s)',
+                           (username, email, password, first_name, last_name))
             mysql.connection.commit()
-            msg = 'You have successfully registered!'
+            session["message"] = 'You Have Successfully Registered!'
+            return redirect("/register2")
 
-    elif request.method == 'POST':
-        # Form is empty... (no POST data)
-        msg = 'Please fill out the form!'
-    # Show registration form with message (if any)
-    return render_template('register.html', msg=msg)
+
+    else:
+
+        message = ""
+        if session.get("message"):
+            message = session.get("message")
+            session.pop("message", None)
+
+        return render_template('register.html', message=message)
 
 
 # http://localhost:5000/pythinlogin/userHome - this will be the home page, only accessible for loggedin users
@@ -291,8 +314,9 @@ def inventory():
 @app.route('/orders.html', methods=['GET', 'POST'])
 def viewOrdersUser():
     id=str(session['ID'])
+    print(id)
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute('SELECT * FROM Orders WHERE User_ID=%s',(id,))
+    cursor.execute('SELECT * FROM Orders WHERE User_ID=%s',[id])
     data = cursor.fetchall()
     return render_template('orders.html', output_data=data)    
 
