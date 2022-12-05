@@ -3,16 +3,10 @@
     <meta charset="UTF-8">
     <title>Lightning Disc Golf Inventory</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    {%extends 'base.html'%}
 </head>
 <body>
-    <div class="topnav">
-        <a href="{{ url_for('Home') }}">Home</a>
-        <a href="{{ url_for('addItem') }}" class="active">Add An Item</a>
-        <a href="{{ url_for('inventory') }}">View Inventory</a>
-        <a href="{{ url_for('updateItem',id=id) }}">Update Item</a>
-        <a href="{{ url_for('userHome',user=session['user']) }}">Profile</a>
-        <a href="#about">About</a>
-    </div>
+ {%block content%}
 <table>
     <thead>
         <tr>
@@ -47,4 +41,5 @@
         padding: 0 20px;
     }
 </style>
+{%endblock%}
 </html>
