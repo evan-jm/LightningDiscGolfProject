@@ -25,10 +25,14 @@
 			<div  id="logo"> <i href="#"><img src="{{ url_for("static", filename="img/My_project-1_6.png") }}" height="90" width="150"></i> </div>
 			<ul>
 				<li><a href="{{ url_for('Home') }}">Home</a></li>
+				{% if 'loggedin' in session%}
+					<li><a href="{{ url_for('userHome',user=session['user']) }}">Profile</a></li>
+					<li><a href="{{ url_for('logout') }}">Logout</a></li>
+				{% else %}
 				<li><a href="{{ url_for('userLogin') }}">Login/Register</a></li>
+				{% endif %}
 				<li><a href="{{ url_for('products') }}">All Products</a></li>
 				<li><a href="{{ url_for('about') }}">About</a></li>
-				<li><a href="{{ url_for('logout') }}">Logout</a></li>
 				<li><a href="{{ url_for('showCart') }}"><i class="fa fa-shopping-cart" style="font-size:24px"></i></a></li>
 			</ul>
 		</nav>

@@ -11,7 +11,7 @@
       <a href="{{ url_for('userLogin') }}">Login/Register</a>
       <a href="{{ url_for('products') }}" class="active">All Products</a>
       <a href="{{ url_for('showCart') }}">View Cart</a>
-      <a href="{{ url_for('userHome') }}">Profile</a>
+      <a href="{{ url_for('userHome',user=session['user']) }}">Profile</a>
       <a href="#about">About</a>
 </div>
 

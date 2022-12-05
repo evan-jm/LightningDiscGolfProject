@@ -10,7 +10,7 @@
         <a href="{{ url_for('addItem') }}" class="active">Add An Item</a>
         <a href="{{ url_for('inventory') }}">View Inventory</a>
         <a href="{{ url_for('updateItem',id=id) }}">Update Item</a>
-        <a href="{{ url_for('userHome') }}">Profile</a>
+        <a href="{{ url_for('userHome',user=session['user']) }}">Profile</a>
         <a href="#about">About</a>
     </div>
 <table>
@@ -18,7 +18,8 @@
         <tr>
             <th style="width:fit-content">Order #</th>
             <th style="width:fit-content">Date Placed</th>
-            <th style="width:fit-content">Customer</th>
+            <th style="width:fit-content">User ID</th>
+            <th style="width:fit-content">Guest ID</th>
             <th style="width:fit-content">Total Cost</th>
             <th style="width:fit-content">Total Quantity</th>
         </tr>
@@ -28,7 +29,8 @@
             <tr>
                 <th>{{row.Order_ID}}</th>
                 <td>{{ row.Order_Date }}</td>
-                <td>{{ row.Customer_ID}}</td>
+                <td>{{ row.User_ID}}</td>
+                <td>{{ row.Guest_ID}}</td>
                 <td>{{ row.Order_Total}}</td>
                 <td>{{row.Total_Quantity}}</td>
                <td><a href="{{ url_for('cancelOrderAdmin',id=row.Order_ID)}}"><button type="button">Cancel Order</button></a></td>

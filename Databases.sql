@@ -23,6 +23,7 @@
     constraint Guest_PK primary key(ID)
     );
     ALTER TABLE Guest AUTO_INCREMENT=20001;
+    insert into Guest Values (default,'Mike','Deer','mdeer@gmail.com', current_timestamp() );
     
     create table Admin
     (
@@ -34,7 +35,7 @@
     password varchar(20) not null,
      constraint User_PK primary key(ID)
     );
-
+    
     insert into Admin Values (default,'admin','Matt','Myles','matt@gmail.com','pword');
     
 create table Item
@@ -65,6 +66,8 @@ constraint Orders_FK1 foreign key(User_ID) references User(ID),
 constraint Orders_FK2 foreign key(Guest_ID) references Guest(ID)
 );
 
+insert into Orders Values(default,'2022-12-04',10001,NULL,'225 Street',40.00,2);
+insert into Orders Values(default,'2022-12-04',NULL,20001,'225 Street',24.00,1);
 
 create table Order_Line_Item
 (
@@ -76,6 +79,12 @@ constraint Order_Line_FK1 foreign key(Order_ID) references Orders(Order_ID),
 constraint Order_Line_FK2 foreign key(ItemID) references Item(ItemID),
 constraint Order_Line_PK primary key(Order_ID,ItemID)
 );
+
+insert into Order_Line_Item Values(1,2,1,20);
+insert into Order_Line_Item Values(1,3,1,20);
+insert into Order_Line_Item Values(2,2,1,20);
+
+
 
 create table Brands
 (
@@ -155,5 +164,3 @@ insert into Brands values
 
 insert into DiscTypes values
 (1, 'Fairway Driver');
-
-

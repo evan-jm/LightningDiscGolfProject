@@ -7,7 +7,7 @@
 <body>
     <div class="topnav">
     <a href="{{ url_for('Home') }}">Home</a>
-    <a href="{{ url_for('userHome') }}">Profile</a>
+    <a href="{{ url_for('userHome',user=session['user']) }}">Profile</a>
     <a href="{{ url_for('showCart') }}">View Cart</a>
     <a href="#about">About</a>
     </div>
@@ -32,7 +32,6 @@
         {% endfor %}
     </tbody>
 </table>
-</body>
 <style>
     table{
         background-color: white;

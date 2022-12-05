@@ -11,7 +11,7 @@
     <a href="{{ url_for('addItem') }}">Add An Item</a>
     <a href="{{ url_for('inventory') }}" class="active">View Inventory</a>
     <a href="{{ url_for('updateItem',id=id) }}">Update Item</a>
-    <a href="{{ url_for('userHome') }}">Profile</a>
+    <a href="{{ url_for('userHome',user=session['user']) }}">Profile</a>
     <a href="#about">About</a>
     </div>
 <table>

@@ -5,7 +5,7 @@
 
 {% block content %}
 
-<h2 class="h2" style="padding:18px"> Welcome back, {{ username }}!</h2>
+<h2 class="h2" style="padding:18px"> Welcome back, {{ user.username }}!</h2>
 
 <div class="box">
   <ul>
@@ -14,8 +14,101 @@
   </ul>
  </div>
 
+ <h3 class="dashboard">Dashboard</h3>
+ <br/>
+
+ <div class="card">
+ <div class="card-header">
+   {{ user.first_name + " " + user.last_name }}
+ </div>
+ <div class="card-body">
+  
+   <p class="card-text">
+
+<div class="container">
+ <div class="row">
+   <div class="col-8">
+
+   <strong>Name:</strong>
+ {{ user.first_name + " " + user.last_name }}<br/>
+
+ <strong>Username:</strong>
+ {{ user.username }}<br/>
+
+ <strong>User Id:</strong>
+ {{ user.ID }}<br/>
+
+ <strong>Email:</strong>
+ {{ user.email }}<br/>
+
+
+  </p>
+
+
+  <div class="card">
+    <div class="card-header">
+      Update Profile
+    </div>
+    <div class="card-body">
+  
+      <form action="{{  url_for('updateUser',id=user.ID,userType=User)}}" method="POST" enctype="multipart/form-data">
+        <div class="msg">{{ msg }}</div>
+        
+        <div class="form-group">
+          <label for="fname">First Name:</label>
+          <input type="text" class="form-control form-control" name="firstname" id="firstname" value="{{user.first_name}}">
+        </div>
+      
+      <div class="form-group">
+          <label for="lname">Last Name:</label>
+          <input type="text" class="form-control" name="lastname" id="lastname" value="{{user.last_name}}">
+      </div>
+      
+      <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="text" class="form-control" name="email" id="email" value="{{user.email}}">
+      </div>
+      
+      <div class="form-group">
+        <label for="total">Username:</label>
+        <input type="text" class="form-control" name="username" id="username" value={{user.username}}>
+      </div>
+      <br>
+
+      <div class="form-group">
+          <label for="shipaddress">Password:</label>
+          <input type="text" class="form-control" name="password" id="password" value="{{user.password}}">
+      </div>
+      <br>
+
+      <p style="padding:8px;"><input type="submit" value="Update Your Info"></p>
+    </form>
+  
+  
+  
+  </div>
+  
+    
+    
+  
+  
+  </div>
+  
+
 
 <style>
+.dashboard{
+  color: white;
+  text-align: center;
+  font-size: large;
+}  
+.card-header{
+  background-color: white;
+}  
+.card
+{
+  background-color: white;
+}
 
 .box {
 width: 750px;

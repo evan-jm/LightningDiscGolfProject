@@ -58,8 +58,9 @@ def userLogin():
             session['loggedin'] = True
             session['ID'] = account['ID']
             session['username'] = account['username']
+            session['user']=account
             # Redirect to home page
-            return render_template('adminHome.html', username=session['username'])
+            return render_template('adminHome.html', user=account)
         # If account does not exist in Admin, check to see if credentials exist in User
         elif not account:
             # Check if account exists using MySQL
@@ -73,8 +74,9 @@ def userLogin():
                 session['loggedin'] = True
                 session['ID'] = account['ID']
                 session['username'] = account['username']
+                session['user']=account
                 # Redirect to home page
-                return render_template('userHome.html', username=session['username'])
+                return render_template('userHome.html', user=account)
         else:
             # Account doesnt exist or username/password incorrect
             msg = 'Incorrect username/password!'
@@ -138,9 +140,9 @@ def userHome():
         cursor.execute('SELECT * FROM Admin WHERE username = %s', (session['username'],))
         account = cursor.fetchone()
         if account:
-            return render_template('adminHome.html', username=session['username'])
+            return render_template('adminHome.html', user=session['user'])
         else:
-            return render_template('userHome.html', username=session['username'])
+            return render_template('userHome.html', user=session['user'])
     # User is not loggedin redirect to login page
     return redirect(url_for('userLogin'))
 
@@ -151,7 +153,7 @@ def adminHome():
     # Check if user is loggedin
     if 'loggedin' in session:
         # User is loggedin show them the home page
-        return render_template('adminHome.html', username=session['username'])
+        return render_template('adminHome.html', user=session['user'])
     else:
         # User is not loggedin redirect to login page
         return redirect(url_for('userLogin'))
@@ -206,7 +208,7 @@ def addItem():
             imageName = secure_filename(image.filename)
             image.save(os.path.join(app.config['UPLOAD_FOLDER'], imageName))
             saveName = imageName
-            cursor.execute('INSERT INTO Item (image, brand, name, disctype, description, release_date, itemcode, cost) VALUES ( %s, %s, %s, %s, %s, %s, %s, %s)', (saveName, brand, name, discType, descrip, release_date, itemCode, cost,))
+            cursor.execute('INSERT INTO Item (itemid,image, brand, name, disctype, description, release_date, itemcode, cost) VALUES ( %s,%s, %s, %s, %s, %s, %s, %s, %s)', (None,saveName, brand, name, discType, descrip, release_date, itemCode, cost,))
             mysql.connection.commit()
             msg = 'Item successfully added'
             
@@ -290,7 +292,7 @@ def inventory():
 def viewOrdersUser():
     id=str(session['ID'])
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute('SELECT * FROM Orders WHERE Customer_ID=%s',(id,))
+    cursor.execute('SELECT * FROM Orders WHERE User_ID=%s',(id,))
     data = cursor.fetchall()
     return render_template('orders.html', output_data=data)    
 
@@ -304,6 +306,34 @@ def cancelOrder(id):
    mysql.connection.commit()
    return redirect(url_for('viewOrdersUser'))  
 
+
+@app.route('/userHome/<string:id><string:userType>', methods=['GET', 'POST'])
+def updateUser(id,userType):
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    if userType == "User":
+        cursor.execute('SELECT * FROM User WHERE ID = %s', (id,))
+    else:
+        cursor.execute('SELECT * FROM Admin WHERE ID = %s', (id,))
+    account= cursor.fetchone()
+    if request.method == "POST" and account:
+        updateFirstName = request.form['firstname']
+        updateLastName= request.form['lastname']
+        updateEmail = request.form['email']
+        updateUsername = request.form['username']
+        updatePword= request.form['password']
+
+        #Check if username already exists
+        cursor.execute('SELECT * FROM User WHERE ID = %s', (id,))
+        checkAccount= cursor.fetchone()
+        if checkAccount and checkAccount['username'] != account['username']:
+            msg='Username Already Exists!'
+            return render_template("userHome.html", msg=msg,user=account)
+        else:
+            cursor.execute('UPDATE User SET username=%s, first_name=%s, last_name=%s, email=%s, password=%s WHERE ID=%s', (updateUsername,updateFirstName,updateLastName,updateEmail,updatePword,id))
+            mysql.connection.commit()
+            cursor.execute('SELECT * FROM User WHERE ID = %s', (id,))
+            account= cursor.fetchone()
+            return render_template("userHome.html", user=account)
 
 #Will be moved, method for viewing products
 @app.route('/products.html',methods=['GET', 'POST'])
@@ -604,34 +634,25 @@ def checkout():
         
         #Checks id of last order, increments it for new order
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM Orders ORDER BY Order_ID DESC LIMIT 1')
-        lastOrder= cursor.fetchone()
-        if(lastOrder):
-            currOrder= lastOrder['Order_ID']+1
-        else:
-            currOrder=1
-
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM Guest ORDER BY ID DESC LIMIT 1')
-        lastGuest= cursor.fetchone()
-        if(lastGuest):
-            currGuest= lastGuest['ID']+1
-        else:
-            currGuest=20001    
 
         #Check if user logged into account, then just create order off their info    
         if 'loggedin' in session:
-            cursor.execute('INSERT INTO Orders(order_id,order_date,user_id,guest_id,address,order_total,total_quantity) VALUES (%s,%s,%s,%s,%s,%s,%s)', (currOrder,datetime.datetime.now(),session['ID'],None,ship,total,quantityT,))
+            cursor.execute('INSERT INTO Orders(order_id,order_date,user_id,guest_id,address,order_total,total_quantity) VALUES (%s,%s,%s,%s,%s,%s,%s)', (None,datetime.datetime.now(),session['ID'],None,ship,total,quantityT,))
             mysql.connection.commit()
         #Else create guest, then create order based off of their info 
         else:
             time= datetime.datetime.now()
-            cursor.execute('INSERT INTO Guest(id,first_name,last_name,email,use_time) VALUES (%s,%s,%s,%s,%s)', (currGuest,fname,lname,email,time,))
+            cursor.execute('INSERT INTO Guest(id,first_name,last_name,email,use_time) VALUES (%s,%s,%s,%s,%s)', (None,fname,lname,email,time,))
             mysql.connection.commit()
-            cursor.execute('INSERT INTO Orders(order_id,order_date,user_id,guest_id,address,order_total,total_quantity) VALUES (%s,%s,%s,%s,%s,%s,%s)', (currOrder,datetime.datetime.now(),None,currGuest,ship,total,quantityT,))
+            cursor.execute('SELECT * FROM Guest ORDER BY ID DESC LIMIT 1')
+            lastGuest= cursor.fetchone()
+            currGuest= lastGuest['ID']
+            cursor.execute('INSERT INTO Orders(order_id,order_date,user_id,guest_id,address,order_total,total_quantity) VALUES (%s,%s,%s,%s,%s,%s,%s)', (None,datetime.datetime.now(),None,currGuest,ship,total,quantityT,))
             mysql.connection.commit()
-        #Commit for both of the Orders inserts
         #Next add each item in cart into order_line_item
+        cursor.execute('SELECT * FROM Orders ORDER BY Order_ID DESC LIMIT 1')
+        lastOrder= cursor.fetchone()
+        currOrder= lastOrder['Order_ID']
         for item in session['cart_item'].items():
             quantity= session['cart_item'][item[0]]['quantity']
             itemTotal= Decimal(session['cart_item'][item[0]]['total_price'])

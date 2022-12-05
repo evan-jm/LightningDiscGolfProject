@@ -14,37 +14,37 @@
   <a href="{{ url_for('addItem') }}" class="active">Add An Item</a>
   <a href="{{ url_for('inventory') }}">View Inventory</a>
   <a href="{{ url_for('updateItem',id=id) }}">Update Item</a>
-  <a href="{{ url_for('userHome') }}">Profile</a>
+  <a href="{{ url_for('userHome',user=session['user']) }}">Profile</a>
   <a href="#about">About</a>
 </div>
   <div class="addItem">
     <form action="{{ url_for('addItem') }}" method="post" enctype="multipart/form-data" autocomplete="off">
       <div class="form-group">
-        <h2><label for="name">Item Name</label></h2>
+        <h2><label for="name" style="padding: 20px;">Item Name</label></h2>
         <input type="text" class="form-control form-control-lg" name="name" id="name" placeholder="Item Name Here">
       </div>
       <div class="form-group">
-        <label for="brand">Item Brand</label>
+        <label for="brand" style="padding: 20px;">Item Brand</label>
         <input type="text" class="form-control" name="brand" id="brand" placeholder="Item Brand Here">
       </div>
       <div class="form-group">
-        <label for="discType">Type of Disc</label>
+        <label for="discType" style="padding: 20px;" >Type of Disc</label>
         <input type="text" class="form-control" name="discType" id="discType" placeholder="Type of Disc">
       </div>
       <div class="form-group">
-        <label for="release_date">Release Date</label>
-        <input type="date" class="form-control" name="release_date" id="release_date" placeholder="Date">
+        <label for="release_date" style="padding: 20px;">Release Date</label>
+        <input type="date" class="form-control-sm" name="release_date" id="release_date" placeholder="Date">
       </div>
       <div class="form-group">
-        <label for="cost">Price</label>
+        <label for="cost" style="padding: 20px;">Price</label>
         <input type="text" class="form-control" name="cost" id="cost" placeholder="Input Decimal Number">
       </div>
       <div class="form-group">
-        <label for="descrip">Description</label>
+        <label for="descrip" style="padding: 20px;">Description</label>
         <textarea class="form-control" id="descrip" name="descrip" rows="10" required></textarea>
       </div>
       <div class="form-group">
-        <label for="image">Product Image</label>
+        <label for="image" style="padding: 20px;">Product Image</label>
         <input type="file" class="form-control" name="image" id="image" required>
       </div>
       <div class="msg">{{ msg }}</div>
