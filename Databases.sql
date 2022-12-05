@@ -106,15 +106,18 @@ insert into Brands values
 (3, 'Infinite');
 
 insert into Item values 
-(1,'Felon1.JPG','Dynamic Discs','Fuzion','Fairway Driver', 'Item Description','2022-11-10','DDDistFusion',20.00),
+(1,'Felon1.JPG','Dynamic Discs','Fuzion','Fairway Driver', 'Item Description','2022-11-10','DDDistFusion',10.00),
 (2,'Escape1.JPG','Dynamic Discs','Escape','Fairway Driver', 'Item Description','2022-10-15','DDDistEscape',20.00),
-(3,'Truth1.JPG','Dynamic Discs','Truth','Fairway Driver', 'Item Description','2022-09-07','DDDistTruth',20.00),
-(4,'Judge1.JPG','Dynamic Discs','Judge','Fairway Driver', 'Item Description','2022-10-07','DDDistJudge',20.00),
-(5,'Culprit1.JPG','Dynamic Discs','Culprit','Fairway Driver', 'Item Description','2022-08-07','DDDistCulprit',20.00),
-(6,'Harp1.JPG','Dynamic Discs','Harp','Fairway Driver', 'Item Description','2022-11-15','DDDistHarp',20.00),
-(7,'Criminal1.JPG','Dynamic Discs','Criminal','Fairway Driver', 'Item Description','2022-09-07','DDDistCriminal',20.00),
-(8,'Trespass1.JPG','Dynamic Discs','Tresspass','Fairway Driver', 'Item Description','2022-09-07','DDDistTrespass',20.00),
-(9,'Raider1.JPG','Dynamic Discs','Raider','Fairway Driver', 'Item Description','2022-09-07','DDDistRaider',20.00);
+(3,'Truth1.JPG','Dynamic Discs','Truth','Fairway Driver', 'Item Description','2022-09-07','DDDistTruth',30.00),
+(4,'Judge1.JPG','Dynamic Discs','Judge','Distance Driver', 'Item Description','2022-10-07','DDDistJudge',20.00),
+(5,'Culprit1.JPG','Dynamic Discs','Culprit','Fairway Driver', 'Item Description','2022-08-07','DDDistCulprit',40.00),
+(6,'Harp1.JPG','Dynamic Discs','Harp','Putter', 'Item Description','2022-11-15','DDDistHarp',20.00),
+(7,'Criminal1.JPG','Innova','Criminal','Distance Driver', 'Item Description','2022-09-07','DDDistCriminal',20.00),
+(8,'Trespass1.JPG','Dynamic Discs','Tresspass','Putter', 'Item Description','2022-09-07','DDDistTrespass',15.00),
+(9,'Raider1.JPG','Dynamic Discs','Raider','Fairway Driver', 'Item Description','2022-09-07','DDDistRaider',20.00),
+(10,'Raider2.JPG','Innova','Raider','Fairway Driver', 'Item Description','2022-08-07','INNDrivRaider',20.00),
+(11,'Culprit2.JPG','Discmania','Raider','Putter', 'Item Description','2022-10-07','DMPuttCulprit',30.00),
+(12,'Tresspass2.JPG','Infinite','Trespass','Distance Driver', 'Item Description','2022-12-07','IFDDrivTrespass',30.00);
 
 UPDATE Item SET Description = "Nothing throws off your game quite like the wind. We're not figuratively talking, though: wind alters where your shot goes, adding an extra variable and increasing unpredictability out on the course.
 
@@ -149,10 +152,24 @@ Speed: 10 Glide: 3 Turn: 1 Fade: 4
 Max Weight: 176g" WHERE ItemID = 7;
 UPDATE Item SET Description = "The Trespass is the high-speed driver for the masses. It is very neutral in its flight, not being too stable or flipping over. The wide rim is able to take all the power that you can throw at it and just keep gliding to new distances. The Trespass will allow you to break through all obstacles and explore new territory in your distance drives.
 
-Speed: 12 Glide: 5 Turn: -0.5 Fade: 3" WHERE ItemID = 8;
+Speed: 12 Glide: 5 Turn: -0.5 Fade: 3" WHERE ItemID=8;
 UPDATE Item SET Description = "The Raider is sure to steal its spot in bags of all skill levels. The Raider sits comfortably between the Trespass and Enforcer in stability, and it excels at finishing forward instead of diving at the end of its flight. Players with slower arm speeds will find a dependable, overstable driver that will gain them distance over the Enforcer or Defender, while faster arms will love the Raider as a workhorse driver that is perfect for carrying multiples to cover a variety of shots. Get ready to put some power on your distance shots, and watch the Raider destroy your previous best drives.
 
 Speed: 13 Glide: 5 Turn: -0.5 Fade: 3" WHERE ItemID = 9;
+
+UPDATE Item SET Description = "The Raider is sure to steal its spot in bags of all skill levels. The Raider sits comfortably between the Trespass and Enforcer in stability, and it excels at finishing forward instead of diving at the end of its flight. Players with slower arm speeds will find a dependable, overstable driver that will gain them distance over the Enforcer or Defender, while faster arms will love the Raider as a workhorse driver that is perfect for carrying multiples to cover a variety of shots. Get ready to put some power on your distance shots, and watch the Raider destroy your previous best drives.
+
+Speed: 13 Glide: 5 Turn: -0.5 Fade: 3" WHERE ItemID = 10;
+
+UPDATE Item SET Description = "The Culprit is a great upshot and approach disc. It can handle any arm speed and holds up well in a headwind. It has a very low profile and small diameter, making it perfect for players with smaller hands who want some beef on their approaches. We suspect you will realize the Culprit is responsible for your improved scores.
+
+Speed: 4 Glide: 2 Turn: 0 Fade: 3.5
+Max Weight: 176g" WHERE ItemID = 11;
+
+UPDATE Item SET Description = "The Trespass is the high-speed driver for the masses. It is very neutral in its flight, not being too stable or flipping over. The wide rim is able to take all the power that you can throw at it and just keep gliding to new distances. The Trespass will allow you to break through all obstacles and explore new territory in your distance drives.
+
+Speed: 12 Glide: 5 Turn: -0.5 Fade: 3" WHERE ItemID=12;
+
 
 
 
@@ -163,4 +180,8 @@ insert into Brands values
 (4, 'Dynamic Discs');
 
 insert into DiscTypes values
-(1, 'Fairway Driver');
+(1, 'Fairway Driver'),
+(2, 'Distance Driver'),
+(3, 'Putter');
+
+

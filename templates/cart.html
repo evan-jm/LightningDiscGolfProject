@@ -68,9 +68,10 @@
                     <p><a id="btnContinue" href="{{ url_for('.products') }}" class="btn btn-danger">Continue Shopping</a></p>
                     <br>
                     <p>{{msg}}</p>
+                    <h3>Choose Shipping Method</h3>
                     <form action="{{ url_for('checkoutPage') }}" method="post" enctype="multipart/form-data" autocomplete="off">
                         <p>
-                            <input type="radio" name="shipMethod" id="bubble" value="Bubble Mailer"> Bubble Packagw - $2 <br>
+                            <input type="radio" name="shipMethod" id="bubble" value="Bubble Mailer"> Bubble Package - $2 <br>
                             <input type="radio" name="shipMethod" id="collect" value="Collector's Bag"> Collector's Bag - $4 <br>
                             <input type="radio" name="shipMethod" id="backpack" value="Backpack"> Backpack - $6 <br>
                         </p>
