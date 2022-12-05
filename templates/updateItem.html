@@ -7,109 +7,107 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 
+    {% extends 'base.html' %}
+  </head>
 <body>
-
- <div class="topnav">
-    <a href="{{ url_for('Home') }}">Home</a>
-    <a href="{{ url_for('userLogin') }}">Login/Register</a>
-    <a href="{{ url_for('addItem') }}">Add An Item</a>
-    <a href="{{ url_for('inventory') }}">View Inventory</a>
-    <a href="{{ url_for('updateItem',id=id) }}" class="active">Update Item</a>
-    <a href="{{ url_for('userHome',user=session['user']) }}">Profile</a>
-    <a href="#about">About</a>
+{%block content%}
+<div class="topnav">
+  <a href="{{ url_for('addItem') }}" >Add An Item</a>
+  <a href="{{ url_for('inventory') }}">View Inventory</a>
+  <a href="{{ url_for('updateItem',id=id) }}" class="active">Update Item</a>
 </div>
 
  <div class="updateItem">
      <form action="{{ url_for('updateItem',id=id) }}" method="post" enctype="multipart/form-data" autocomplete="off">
          <div class="row">
-             <h2><label for="oldname" style="padding: 20px;">Current Item Name: </label></h2>
+             <h2><label for="oldname"  style="color:white;" >Current Item Name: </label></h2>
             <div class="col-sm-10">
-            <input type="text" readonly class="form-control-plaintext" id="oldname" value="{{item.Name}}">
+            <input type="text" style="color: white;" readonly class="form-control-plaintext" id="oldname" value="{{item.Name}}">
             </div>
          </div>
         <div class="form-group">
-            <label for="name">New Item Name</label>
+            <label for="name" style="color: white;">New Item Name</label>
             <input type="text" class="form-control form-control" name="name" id="name" placeholder="New Name Here, Leave empty if no update" >
         </div>
          <br>
 
          <div class="row">
-             <h2><label for="oldbrand" style="padding: 20px;">Current Item Brand: </label></h2>
+             <h2><label for="oldbrand"  style=" color:white;" >Current Item Brand: </label></h2>
             <div class="col-sm-10">
-            <input type="text" readonly class="form-control-plaintext" id="oldbrand" value="{{item.Brand}}">
+            <input type="text" style="color: white;" readonly class="form-control-plaintext" id="oldbrand" value="{{item.Brand}}">
             </div>
          </div>
       <div class="form-group">
-        <label for="brand">New Item Brand</label>
+        <label for="brand" style="color: white;" >New Item Brand</label>
         <input type="text" class="form-control" name="brand" id="brand" placeholder="New Brand Here, leave empty if no update" >
       </div>
          <br>
 
           <div class="row">
-             <h2><label for="oldtype" style="padding: 20px;"> Current Disc Type: </label></h2>
+            <h2><label for="oldtype" style=" color:white;" > Current Disc Type: </label></h2>
             <div class="col-sm-10">
-            <input type="text" readonly class="form-control-plaintext" id="oldtype" value="{{item.DiscType}}">
+            <input type="text" style="color: white;" readonly class="form-control-plaintext" id="oldtype" value="{{item.DiscType}}">
             </div>
          </div>
       <div class="form-group">
-        <label for="discType">New Disc Type</label>
+        <label for="discType" style="color: white;">New Disc Type</label>
         <input type="text" class="form-control" name="discType" id="discType" placeholder="Type of Disc, leave empty if no update" >
       </div>
       <br>
 
        <div class="row">
-             <h2><label for="olddate" style="padding: 20px;"> Current Release Date: </label></h2>
+             <h2><label for="olddate"  style="color:white;" > Current Release Date: </label></h2>
             <div class="col-sm-10">
-            <input type="text" readonly class="form-control-plaintext" id="olddate" value="{{item.Release_Date}}">
+            <input type="text" style="color: white;" readonly class="form-control-plaintext" id="olddate" value="{{item.Release_Date}}">
             </div>
          </div>
       <div class="form-group">
-        <label for="release_date">Release Date</label>
+        <label for="release_date" style="color: white;">Release Date</label>
         <input type="date" class="form-control-sm" size="12" name="release_date" id="release_date" placeholder="Date, leave empty if no update" >
       </div>
          <br>
 
        <div class="row">
-             <h2><label for="oldcost" style="padding: 20px;"> Current Price: </label></h2>
+             <h2><label for="oldcost"  style="color:white;" > Current Price: </label></h2>
             <div class="col-sm-10">
-            <input type="text" readonly class="form-control-plaintext" id="oldcost" value="{{item.Cost}}">
+            <input type="text" style="color: white;"  readonly class="form-control-plaintext" id="oldcost" value="{{item.Cost}}">
             </div>
          </div>
       <div class="form-group">
-        <label for="cost">Price</label>
+        <label for="cost" style="color: white;">Price</label>
         <input type="text" class="form-control" name="cost" id="cost" placeholder="Input Decimal Number, Leave empty if no update">
       </div>
          <br>
 
          <div class="form-group">
-            <label for="olddescrip">Current Description</label>
+            <label for="olddescrip" style="color: white;">Current Description</label>
             <textarea class="form-control form-control" readonly class="form-control-plaintext" id="olddescrip" rows="10">{{item.Description}}</textarea>
         </div>
       <div class="form-group">
-        <label for="descrip">New Description</label>
+        <label for="descrip" style="color: white;">New Description</label>
         <textarea class="form-control form-control" name="descrip" id="descrip" rows="10" placeholder="Leave empty if no update" ></textarea>
       </div>
       <br>
 
       <div class="row">
-        <h2><label for="oldcode" style="padding: 20px;"> Current Code: </label></h2>
+        <h2><label for="oldcode"  style=" color:white;"> Current Code: </label></h2>
        <div class="col-sm-10">
-       <input type="text" readonly class="form-control-plaintext" id="oldcode" value="{{item.ItemCode}}">
+       <input type="text" readonly class="form-control-plaintext" style="color: white;" id="oldcode" value="{{item.ItemCode}}">
        </div>
     </div>
     <div class="form-group">
-      <label for="code">Item Code</label>
+      <label for="code" style="color: white;">New Item Code</label>
       <input type="text" class="form-control" name="code" id="code" placeholder="Input new item code, leave blank if no change">
     </div>
     <br>
 
 
       <div class="form-group">
-        <label>Current Item Image</label>
+        <label style="color: white;">Current Item Image</label>
          <img src="/static/product-images/{{ item.Image }}" width="120" height="120">
       </div>
       <div class="form-group">
-        <label for="image">Choose New Product Image</label>
+        <label for="image" style="color: white;">Choose New Product Image</label>
         <input type="file" class="form-control" name="image" id="image">
       </div>
       <div class="msg">{{ msg }}</div>
@@ -117,4 +115,5 @@
     </form>
  </div>
 </body>
+{% endblock %}
   </html>

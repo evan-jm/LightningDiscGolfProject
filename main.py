@@ -55,17 +55,17 @@ def userLogin():
         print(account, "admin table")
 
         # If account exists in accounts table in out database
-        if account != None:
+        if account:
             # Create session data, we can access this data in other routes
             session['loggedin'] = True
             session['ID'] = account['ID']
             session['username'] = account['username']
             session['user']=account
             # Redirect to home page
-            return render_template('adminHome.html',user=session['user'])
+            return render_template('adminHome.html',user=account)
 
         # If account does not exist in Admin, check to see if credentials exist in User
-        elif username != "mattm":
+        elif not account:
             # Check if account exists using MySQL
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('SELECT * FROM User WHERE username = %s AND password = %s', (username, password,))
@@ -78,8 +78,8 @@ def userLogin():
                 session['loggedin'] = True
                 session['ID'] = account['ID']
                 session['username'] = account['username']
-
-                return render_template('userHome.html',user=session['user'])
+                session['user']=account
+                return render_template('userHome.html',user=account)
 
             else:
                 session["message"] = "Incorrect username/password"
@@ -163,9 +163,11 @@ def userHome():
         cursor.execute('SELECT * FROM Admin WHERE username = %s', (session['username'],))
         account = cursor.fetchone()
         if account:
-            return render_template('adminHome.html', user=session['user'])
+            return render_template('adminHome.html', user=account)
         else:
-            return render_template('userHome.html', user=session['user'])
+            cursor.execute('SELECT * FROM User WHERE username = %s', (session['username'],))
+            account=cursor.fetchone()
+            return render_template('userHome.html', user=account)
     # User is not loggedin redirect to login page
     return redirect(url_for('userLogin'))
 
@@ -180,6 +182,32 @@ def adminHome():
     else:
         # User is not loggedin redirect to login page
         return redirect(url_for('userLogin'))
+
+
+@app.route('/adminHome/<string:id>', methods=['GET', 'POST'])
+def updateAdmin(id):
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT * FROM Admin WHERE ID = %s', (id,))
+    account= cursor.fetchone()
+    if request.method == "POST" and account:
+        updateFirstName = request.form['firstname']
+        updateLastName= request.form['lastname']
+        updateEmail = request.form['email']
+        updateUsername = request.form['username']
+        updatePword= request.form['password']
+
+        #Check if username already exists
+        cursor.execute('SELECT * FROM Admin WHERE ID = %s', (id,))
+        checkAccount= cursor.fetchone()
+        if checkAccount and checkAccount['username'] != account['username']:
+            msg='Username Already Exists!'
+            return render_template("adminHome.html", msg=msg,user=account)
+        else:
+            cursor.execute('UPDATE Admin SET username=%s, first_name=%s, last_name=%s, email=%s, password=%s WHERE ID=%s', (updateUsername,updateFirstName,updateLastName,updateEmail,updatePword,id))
+            mysql.connection.commit()
+            cursor.execute('SELECT * FROM Admin WHERE ID = %s', (id,))
+            account= cursor.fetchone()
+            return render_template("adminHome.html", user=account)
 
 
 @app.route('/adminOrders.html', methods=['GET', 'POST'])
@@ -299,6 +327,8 @@ def valueCheck(field, itemfield):
 @app.route('/inventory.html/<string:id>', methods=['GET', 'POST'])
 def deleteItem(id):
    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+   cursor.execute('DELETE FROM Order_Line_Item WHERE ItemID = %s', (id,))
+   mysql.connection.commit()
    cursor.execute('DELETE FROM Item WHERE ItemID = %s', (id,))
    mysql.connection.commit()
    return redirect(url_for('inventory'))    
@@ -331,13 +361,10 @@ def cancelOrder(id):
    return redirect(url_for('viewOrdersUser'))  
 
 
-@app.route('/userHome/<string:id><string:userType>', methods=['GET', 'POST'])
-def updateUser(id,userType):
+@app.route('/userHome/<string:id>', methods=['GET', 'POST'])
+def updateUser(id):
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    if userType == "User":
-        cursor.execute('SELECT * FROM User WHERE ID = %s', (id,))
-    else:
-        cursor.execute('SELECT * FROM Admin WHERE ID = %s', (id,))
+    cursor.execute('SELECT * FROM User WHERE ID = %s', (id,))
     account= cursor.fetchone()
     if request.method == "POST" and account:
         updateFirstName = request.form['firstname']
@@ -520,8 +547,8 @@ def add_product_to_cart():
 
             costStr=row['Cost']
             cost= Decimal(costStr)
-            itemArray = {row['ItemCode']: {'Name': row['Name'], 'ItemCode': row['ItemCode'], 'quantity': _quantity, 'Cost': cost, 'Image': row['Image'], 'total_price': _quantity * cost}}
-
+            total=_quantity*cost
+            itemArray = {row['ItemCode']: {'Name': row['Name'], 'ItemCode': row['ItemCode'], 'quantity': _quantity, 'Cost': cost, 'Image': row['Image'], 'total_price': str(total)}}
             all_total_price = 0
             all_total_quantity = 0
 
